@@ -1,0 +1,32 @@
+{
+  "name": "format-microformat",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Formats a Microformat JSON representation into eg. a Jekyll post",
+  "author": "Pelle Wessman <pelle@kodfabrik.se> (http://kodfabrik.se/)",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/voxpelli/node-format-microformat.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "test": "node -e \"require('grunt').tasks(['test']);\"",
+    "test-all": "node -e \"require('grunt').tasks(['test-all']);\"",
+    "prepush": "npm test"
+  },
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "chai-as-promised": "^5.1.0",
+    "grunt": "^0.4.5",
+    "husky": "^0.7.0",
+    "istanbul": "^0.3.17",
+    "lintlovin": "^1.15.1",
+    "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "js-yaml": "^3.3.1",
+    "lodash": "^3.10.0",
+    "strftime": "^0.9.2"
+  }
+}
