@@ -22,7 +22,8 @@
     "husky": "^0.7.0",
     "istanbul": "^0.3.17",
     "lintlovin": "^1.15.1",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "sinon": "^1.15.4"
   },
   "dependencies": {
     "js-yaml": "^3.3.1",

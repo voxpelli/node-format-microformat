@@ -18,6 +18,7 @@ Formatter.prototype._formatFrontMatter = function (source) {
   //TODO: Make configurable?
   var mapping = {
     name: 'title',
+    slug: 'slug',
     category: 'categories',
   };
   var ignore = ['content', 'published'];
@@ -39,7 +40,11 @@ Formatter.prototype._formatContent = function (data) {
   return data.content ? data.content + '\n' : '';
 };
 
-Formatter.prototype._formatName = function (data) {
+Formatter.prototype._formatSlug = function (data) {
+  if (data.properties.slug && data.properties.slug[0]) {
+    return _.kebabCase(data.properties.slug[0]);
+  }
+
   var name = (data.properties.name || data.properties.content || [''])[0].trim();
 
   if (name) {
@@ -56,6 +61,9 @@ Formatter.prototype._formatName = function (data) {
 Formatter.prototype.preFormat = function (data) {
   data = _.cloneDeep(data);
 
+  var slug = this._formatSlug(data);
+
+  data.properties.slug = slug ? [slug] : [];
   data.properties.published = [data.properties.published && data.properties.published[0] ? new Date(data.properties.published[0]) : new Date()];
 
   return Promise.resolve(data);
@@ -66,13 +74,13 @@ Formatter.prototype.format = function (data) {
 };
 
 Formatter.prototype.formatFilename = function (data) {
-  var name = this._formatName(data);
-  return Promise.resolve('_posts/' + strftime('%Y-%m-%d', data.properties.published[0]) + (name ? '-' + name : '') + '.html');
+  var slug = data.properties.slug[0];
+  return Promise.resolve('_posts/' + strftime('%Y-%m-%d', data.properties.published[0]) + (slug ? '-' + slug : '') + '.html');
 };
 
 Formatter.prototype.formatURL = function (data, relativeTo) {
-  var name = this._formatName(data);
-  var url = strftime('%Y/%m', data.properties.published[0]) + '/' + (name ? name + '/' : '');
+  var slug = data.properties.slug[0];
+  var url = strftime('%Y/%m', data.properties.published[0]) + '/' + (slug ? slug + '/' : '');
 
   if (relativeTo) {
     url = urlModule.resolve(relativeTo, url);
