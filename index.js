@@ -13,6 +13,7 @@ Formatter.prototype._formatFrontMatter = function (source) {
   var target = {
     layout: 'micropubpost',
     date: source.published[0].toISOString(),
+    title: null,
   };
 
   //TODO: Make configurable?

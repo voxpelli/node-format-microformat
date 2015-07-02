@@ -58,6 +58,7 @@ describe('Formatter', function () {
         '---\n' +
         'layout: micropubpost\n' +
         'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: null\n' +
         'slug: awesomeness-is-awesome\n' +
         '---\n' +
         'hello world\n'
@@ -131,6 +132,7 @@ describe('Formatter', function () {
         '---\n' +
         'layout: micropubpost\n' +
         'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: null\n' +
         'mf-like-of:\n' +
         '  - \'http://example.com/liked/page\'\n' +
         '---\n'
