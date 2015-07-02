@@ -42,7 +42,7 @@ describe('Formatter', function () {
     it('should return a fully formatted page on sunny day content', function () {
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
-        'layout: post\n' +
+        'layout: micropubpost\n' +
         'date: \'2015-06-30T14:34:01.000Z\'\n' +
         'title: awesomeness is awesome\n' +
         'slug: awesomeness-is-awesome\n' +
@@ -56,7 +56,7 @@ describe('Formatter', function () {
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
-        'layout: post\n' +
+        'layout: micropubpost\n' +
         'date: \'2015-06-30T14:34:01.000Z\'\n' +
         'slug: awesomeness-is-awesome\n' +
         '---\n' +
@@ -69,7 +69,7 @@ describe('Formatter', function () {
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
-        'layout: post\n' +
+        'layout: micropubpost\n' +
         'date: \'2015-06-30T14:34:01.000Z\'\n' +
         'title: awesomeness is awesome\n' +
         '---\n' +
@@ -82,7 +82,7 @@ describe('Formatter', function () {
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
-        'layout: post\n' +
+        'layout: micropubpost\n' +
         'date: \'2015-06-30T14:34:01.000Z\'\n' +
         'title: awesomeness is awesome\n' +
         'slug: awesomeness-is-awesome\n' +
@@ -95,7 +95,7 @@ describe('Formatter', function () {
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
-        'layout: post\n' +
+        'layout: micropubpost\n' +
         'date: \'2015-06-30T14:34:01.000Z\'\n' +
         'title: awesomeness is awesome\n' +
         'slug: awesomeness-is-awesome\n' +

@@ -11,7 +11,7 @@ var Formatter = function () {};
 
 Formatter.prototype._formatFrontMatter = function (source) {
   var target = {
-    layout: 'post',
+    layout: 'micropubpost',
     date: source.published[0].toISOString(),
   };
 
