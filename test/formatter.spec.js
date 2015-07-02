@@ -99,7 +99,7 @@ describe('Formatter', function () {
         'date: \'2015-06-30T14:34:01.000Z\'\n' +
         'title: awesomeness is awesome\n' +
         'slug: awesomeness-is-awesome\n' +
-        'categories: foo bar\n' +
+        'tags: foo bar\n' +
         '---\n' +
         'hello world\n'
       );

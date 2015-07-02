@@ -19,7 +19,7 @@ Formatter.prototype._formatFrontMatter = function (source) {
   var mapping = {
     name: 'title',
     slug: 'slug',
-    category: 'categories',
+    category: 'tags',
   };
   var ignore = ['content', 'published'];
 
