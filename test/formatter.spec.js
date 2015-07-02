@@ -65,19 +65,6 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle non-existing slug', function () {
-      baseMicroformatData.properties.slug = [];
-
-      return formatter.format(baseMicroformatData).should.eventually.equal(
-        '---\n' +
-        'layout: micropubpost\n' +
-        'date: \'2015-06-30T14:34:01.000Z\'\n' +
-        'title: awesomeness is awesome\n' +
-        '---\n' +
-        'hello world\n'
-      );
-    });
-
     it('should handle non-existing content', function () {
       delete baseMicroformatData.properties.content;
 
@@ -156,10 +143,10 @@ describe('Formatter', function () {
       formatter._formatSlug(baseMicroformatData).should.equal('hello-world');
     });
 
-    it('should ulimately return empty slug', function () {
+    it('should ulimately fall back to publish time', function () {
       delete baseMicroformatData.properties.name;
       delete baseMicroformatData.properties.content;
-      formatter._formatSlug(baseMicroformatData).should.equal('');
+      formatter._formatSlug(baseMicroformatData).should.equal('52441');
     });
 
     it('should limit length of extracted slug', function () {
@@ -179,22 +166,12 @@ describe('Formatter', function () {
       return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-30-awesomeness-is-awesome.html');
     });
 
-    it('should handle lack of slug', function () {
-      baseMicroformatData.properties.slug = [];
-      return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-30.html');
-    });
-
   });
 
   describe('formatURL', function () {
 
     it('should base URL on slug', function () {
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015/06/awesomeness-is-awesome/');
-    });
-
-    it('should handle lack of slug', function () {
-      baseMicroformatData.properties.slug = [];
-      return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015/06/');
     });
 
     it('should return absolute URL when requested', function () {
@@ -213,13 +190,6 @@ describe('Formatter', function () {
     it('should ensure slug', function () {
       delete baseMicroformatData.properties.slug;
       return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('properties.slug[0]', 'awesomeness-is-awesome');
-    });
-
-    it('should handle missing slug', function () {
-      delete baseMicroformatData.properties.name;
-      delete baseMicroformatData.properties.content;
-      delete baseMicroformatData.properties.slug;
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('properties.slug').that.is.equal([]);
     });
 
   });

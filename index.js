@@ -54,9 +54,11 @@ Formatter.prototype._formatSlug = function (data) {
       name = name.slice(0, 5);
     }
     name = name.join(' ');
+  } else {
+    name = Math.floor(data.properties.published[0].getTime() / 1000) % (24 * 60 * 60) + '';
   }
 
-  return name ? _.kebabCase(name) : '';
+  return _.kebabCase(name);
 };
 
 Formatter.prototype.preFormat = function (data) {
