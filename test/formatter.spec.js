@@ -121,6 +121,22 @@ describe('Formatter', function () {
       );
     });
 
+    it('should handle a "like" document', function () {
+      delete baseMicroformatData.properties.name;
+      delete baseMicroformatData.properties.content;
+      baseMicroformatData.properties.slug = [];
+      baseMicroformatData.properties['like-of'] = ['http://example.com/liked/page'];
+
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: micropubpost\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'mf-like-of:\n' +
+        '  - \'http://example.com/liked/page\'\n' +
+        '---\n'
+      );
+    });
+
   });
 
   describe('_formatSlug', function () {
