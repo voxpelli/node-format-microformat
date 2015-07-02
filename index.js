@@ -29,7 +29,7 @@ Formatter.prototype._formatFrontMatter = function (source) {
     if (mapping[key]) {
       target[mapping[key]] = value.join(' ');
     } else {
-      target['mf_' + key] = value;
+      target['mf-' + key] = value;
     }
   });
 

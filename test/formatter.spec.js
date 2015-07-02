@@ -105,6 +105,22 @@ describe('Formatter', function () {
       );
     });
 
+    it('should handle additional microformat content', function () {
+      baseMicroformatData.properties.foo = ['bar'];
+
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: micropubpost\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        'mf-foo:\n' +
+        '  - bar\n' +
+        '---\n' +
+        'hello world\n'
+      );
+    });
+
   });
 
   describe('_formatSlug', function () {
