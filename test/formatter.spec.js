@@ -146,18 +146,27 @@ describe('Formatter', function () {
     });
 
     it('should base slug on title', function () {
-      return formatter._formatSlug(baseMicroformatData).should.equal('awesomeness-is-awesome');
+      formatter._formatSlug(baseMicroformatData).should.equal('awesomeness-is-awesome');
     });
 
     it('should fall back to base slug on content', function () {
       delete baseMicroformatData.properties.name;
-      return formatter._formatSlug(baseMicroformatData).should.equal('hello-world');
+      formatter._formatSlug(baseMicroformatData).should.equal('hello-world');
     });
 
     it('should ulimately return empty slug', function () {
       delete baseMicroformatData.properties.name;
       delete baseMicroformatData.properties.content;
-      return formatter._formatSlug(baseMicroformatData).should.equal('');
+      formatter._formatSlug(baseMicroformatData).should.equal('');
+    });
+
+    it('should limit length of extracted slug', function () {
+      baseMicroformatData.properties.name = ['One Two Three Four Five Six Seven'];
+      formatter._formatSlug(baseMicroformatData).should.equal('one-two-three-four-five');
+
+      baseMicroformatData.properties.content = baseMicroformatData.properties.name;
+      delete baseMicroformatData.properties.name;
+      formatter._formatSlug(baseMicroformatData).should.equal('one-two-three-four-five');
     });
 
   });
