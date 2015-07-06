@@ -6,6 +6,9 @@ var _ = require('lodash');
 var urlModule = require('url');
 var yaml = require('js-yaml');
 var strftime = require('strftime');
+var ent = require('ent');
+
+var htmlRegexp = /<[^>]+>/g;
 
 var Formatter = function () {};
 
@@ -46,7 +49,15 @@ Formatter.prototype._formatSlug = function (data) {
     return _.kebabCase(data.properties.slug[0]);
   }
 
-  var name = (data.properties.name || data.properties.content || [''])[0].trim();
+  var name;
+
+  if (data.properties.name) {
+    name = data.properties.name[0].trim();
+  }
+  if (!name && data.properties.content) {
+    name = data.properties.content[0].trim();
+    name = ent.decode(name.replace(htmlRegexp, ''));
+  }
 
   if (name) {
     name = name.split(/\s+/);

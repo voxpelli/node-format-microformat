@@ -143,6 +143,14 @@ describe('Formatter', function () {
       formatter._formatSlug(baseMicroformatData).should.equal('hello-world');
     });
 
+    it('should ignore html-tags when basing slug on content', function () {
+      delete baseMicroformatData.properties.name;
+      baseMicroformatData.properties.content = ['<h1>Foo</h1> Bar &amp; <strong>Abc</strong>'];
+      // Test twice so that we don't get a non-reusable regexp!
+      formatter._formatSlug(baseMicroformatData).should.equal('foo-bar-abc');
+      formatter._formatSlug(baseMicroformatData).should.equal('foo-bar-abc');
+    });
+
     it('should ulimately fall back to publish time', function () {
       delete baseMicroformatData.properties.name;
       delete baseMicroformatData.properties.content;
