@@ -4,6 +4,7 @@
   "license": "MIT",
   "description": "Formats a Microformat JSON representation into eg. a Jekyll post",
   "author": "Pelle Wessman <pelle@kodfabrik.se> (http://kodfabrik.se/)",
+  "homepage": "https://github.com/voxpelli/node-format-microformat",
   "repository": {
     "type": "git",
     "url": "git://github.com/voxpelli/node-format-microformat.git"
