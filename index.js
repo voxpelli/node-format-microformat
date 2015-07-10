@@ -12,7 +12,10 @@ var htmlRegexp = /<[^>]+>/g;
 
 var Formatter = function () {};
 
-Formatter.prototype._formatFrontMatter = function (source) {
+Formatter.prototype._formatFrontMatter = function (data) {
+  var source = data.properties;
+  var derived = data.derived || {};
+
   var target = {
     layout: 'micropubpost',
     date: source.published[0].toISOString(),
@@ -37,11 +40,15 @@ Formatter.prototype._formatFrontMatter = function (source) {
     }
   });
 
+  if (derived.category) {
+    target.category = derived.category;
+  }
+
   return '---\n' + yaml.safeDump(target) + '---\n';
 };
 
 Formatter.prototype._formatContent = function (data) {
-  return data.content ? data.content + '\n' : '';
+  return data.properties.content ? data.properties.content + '\n' : '';
 };
 
 Formatter.prototype._formatSlug = function (data) {
@@ -80,11 +87,17 @@ Formatter.prototype.preFormat = function (data) {
   data.properties.slug = slug ? [slug] : [];
   data.properties.published = [data.properties.published && data.properties.published[0] ? new Date(data.properties.published[0]) : new Date()];
 
+  data.derived = {};
+
+  if (!_.isEmpty(data.properties['in-reply-to']) || !_.isEmpty(data.properties['like-of'])) {
+    data.derived.category = 'interaction';
+  }
+
   return Promise.resolve(data);
 };
 
 Formatter.prototype.format = function (data) {
-  return Promise.resolve(this._formatFrontMatter(data.properties) + this._formatContent(data.properties));
+  return Promise.resolve(this._formatFrontMatter(data) + this._formatContent(data));
 };
 
 Formatter.prototype.formatFilename = function (data) {
@@ -93,8 +106,14 @@ Formatter.prototype.formatFilename = function (data) {
 };
 
 Formatter.prototype.formatURL = function (data, relativeTo) {
+  var derived = data.derived || {};
+
   var slug = data.properties.slug[0];
   var url = strftime('%Y/%m', data.properties.published[0]) + '/' + (slug ? slug + '/' : '');
+
+  if (derived.category) {
+    url = derived.category + '/' + url;
+  }
 
   if (relativeTo) {
     url = urlModule.resolve(relativeTo, url);

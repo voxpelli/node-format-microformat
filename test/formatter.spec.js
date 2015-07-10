@@ -126,6 +126,21 @@ describe('Formatter', function () {
       );
     });
 
+    it('should handle derived, real, categories', function () {
+      baseMicroformatData.derived = { category: 'interaction' };
+
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: micropubpost\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        'category: interaction\n' +
+        '---\n' +
+        'hello world\n'
+      );
+    });
+
   });
 
   describe('_formatSlug', function () {
@@ -186,6 +201,11 @@ describe('Formatter', function () {
       return formatter.formatURL(baseMicroformatData, 'http://example.com/foo/').should.eventually.equal('http://example.com/foo/2015/06/awesomeness-is-awesome/');
     });
 
+    it('should include derived category if any', function () {
+      baseMicroformatData.derived = { category: 'interaction' };
+      return formatter.formatURL(baseMicroformatData).should.eventually.equal('interaction/2015/06/awesomeness-is-awesome/');
+    });
+
   });
 
   describe('preFormat', function () {
@@ -198,6 +218,20 @@ describe('Formatter', function () {
     it('should ensure slug', function () {
       delete baseMicroformatData.properties.slug;
       return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('properties.slug[0]', 'awesomeness-is-awesome');
+    });
+
+    it('should derive interaction category for replies', function () {
+      baseMicroformatData.properties['in-reply-to'] = ['http://example.com/liked/page'];
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'interaction');
+    });
+
+    it('should derive interaction category for likes', function () {
+      baseMicroformatData.properties['like-of'] = ['http://example.com/liked/page'];
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'interaction');
+    });
+
+    it('should not derive interaction category for non-interactions', function () {
+      return formatter.preFormat(baseMicroformatData).should.eventually.not.have.deep.property('derived.category');
     });
 
   });
