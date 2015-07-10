@@ -221,7 +221,7 @@ describe('Formatter', function () {
     });
 
     it('should derive interaction category for replies', function () {
-      baseMicroformatData.properties['in-reply-to'] = ['http://example.com/liked/page'];
+      baseMicroformatData.properties['in-reply-to'] = ['http://example.com/replied/to/page'];
       return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'interaction');
     });
 
@@ -230,7 +230,12 @@ describe('Formatter', function () {
       return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'interaction');
     });
 
-    it('should not derive interaction category for non-interactions', function () {
+    it('should derive bookmark category for bookmarks', function () {
+      baseMicroformatData.properties.bookmark = ['http://example.com/bookmarked/page'];
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'bookmark');
+    });
+
+    it('should not derive interaction category for normal post', function () {
       return formatter.preFormat(baseMicroformatData).should.eventually.not.have.deep.property('derived.category');
     });
 

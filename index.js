@@ -92,6 +92,9 @@ Formatter.prototype.preFormat = function (data) {
   if (!_.isEmpty(data.properties['in-reply-to']) || !_.isEmpty(data.properties['like-of'])) {
     data.derived.category = 'interaction';
   }
+  if (!_.isEmpty(data.properties.bookmark)) {
+    data.derived.category = 'bookmark';
+  }
 
   return Promise.resolve(data);
 };
