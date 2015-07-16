@@ -1,6 +1,6 @@
 {
   "name": "format-microformat",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "description": "Formats a Microformat JSON representation into eg. a Jekyll post",
   "author": "Pelle Wessman <pelle@kodfabrik.se> (http://kodfabrik.se/)",

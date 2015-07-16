@@ -1,3 +1,13 @@
+### 0.1.2 (2015-07-16)
+
+
+#### Features
+
+* **main:**
+  * derive bookmarks as its own category ([f2d78c40](https://github.com/voxpelli/node-format-microformat/commit/f2d78c409f782ca5d8880570ffa5216f18cdc465))
+  * interaction category for interactions ([d626eae3](https://github.com/voxpelli/node-format-microformat/commit/d626eae35cb4f19e8b2e25982ae5477c01da0d8c))
+
+
 ### 0.1.1 (2015-07-07)
 
 
