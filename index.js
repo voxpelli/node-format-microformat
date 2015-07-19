@@ -105,7 +105,7 @@ Formatter.prototype.format = function (data) {
 
 Formatter.prototype.formatFilename = function (data) {
   var slug = data.properties.slug[0];
-  return Promise.resolve('_posts/' + strftime('%Y-%m-%d', data.properties.published[0]) + (slug ? '-' + slug : '') + '.html');
+  return Promise.resolve('_posts/' + strftime('%Y-%m', data.properties.published[0]) + (slug ? '-' + slug : '') + '.html');
 };
 
 Formatter.prototype.formatURL = function (data, relativeTo) {

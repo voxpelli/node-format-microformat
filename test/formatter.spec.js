@@ -186,7 +186,7 @@ describe('Formatter', function () {
   describe('formatFilename', function () {
 
     it('should use slug', function () {
-      return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-30-awesomeness-is-awesome.html');
+      return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-awesomeness-is-awesome.html');
     });
 
   });
