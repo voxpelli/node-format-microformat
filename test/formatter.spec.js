@@ -337,6 +337,44 @@ describe('Formatter', function () {
 
   });
 
+  describe('formatAll', function () {
+
+    it('should format everything correctly', function () {
+      baseMicroformatData.files = {
+        photo: [
+          {
+            filename: 'bar.png',
+            buffer: new Buffer('sampledata')
+          }
+        ]
+      };
+
+      formatter = new Formatter('http://example.com/bar/');
+
+      return formatter.formatAll(baseMicroformatData, 'http://example.com/bar/')
+        .should.eventually
+        .have.all.keys('filename', 'url', 'content', 'files')
+        .that.deep.equals({
+          filename: '_posts/2015-06-awesomeness-is-awesome.html',
+          url: 'http://example.com/bar/2015/06/awesomeness-is-awesome/',
+          content: '---\n' +
+            'layout: micropubpost\n' +
+            'date: \'2015-06-30T14:34:01.000Z\'\n' +
+            'title: awesomeness is awesome\n' +
+            'slug: awesomeness-is-awesome\n' +
+            'mf-photo:\n' +
+            '  - \'http://example.com/bar/media/2015-06-awesomeness-is-awesome/bar.png\'\n' +
+            '---\n' +
+            'hello world\n',
+          files: [
+            {
+              filename: 'media/2015-06-awesomeness-is-awesome/bar.png',
+              buffer: new Buffer('sampledata'),
+            }
+          ],
+        });
+    });
+
   });
 
 });

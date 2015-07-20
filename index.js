@@ -208,4 +208,26 @@ Formatter.prototype.formatFilesURL = function (type, file, data) {
   });
 };
 
+Formatter.prototype.formatAll = function (data) {
+  var that = this;
+
+  return this.preFormat(data)
+    .then(function (formattedData) {
+      return Promise.all([
+        that.formatFilename(formattedData),
+        that.formatURL(formattedData, that.relativeTo),
+        that.format(formattedData),
+        formattedData.files,
+      ]);
+    })
+    .then(function (result) {
+      return {
+        filename: result[0],
+        url:      result[1],
+        content:  result[2],
+        files:    result[3],
+      };
+    });
+};
+
 module.exports = Formatter;

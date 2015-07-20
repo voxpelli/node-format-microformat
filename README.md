@@ -24,10 +24,26 @@ Currently formats data into a hardcoded Jekyll style. This is intended to become
 
 ## Usage
 
+Simple:
+
 ```javascript
 var MicropubFormatter = require('format-microformat');
 
 var formatter = new MicropubFormatter();
+
+formatter.formatAll(micropubDocument)
+  .then(function (formatted) {
+    // Lots of formatted data that one can do lots of fun stuff with. Publish somewhere or such perhaps?
+    // Available keys are "filename", "url", "content" and lastly "files" if any files were uploaded
+  });
+```
+
+Advanced:
+
+```javascript
+var MicropubFormatter = require('format-microformat');
+
+var formatter = new MicropubFormatter('http://example.com/');
 
 formatter.preFormat(micropubDocument)
   .then(function (preFormatted) {
@@ -50,7 +66,8 @@ formatter.preFormat(micropubDocument)
 
 ## Methods
 
-* **preFormat(micropubDocument)** – takes a `micropubDocument` and ensures that all necessary parts are there. **Currently required** to run a `micropubDocument` through this method before handing it to the rest of the methods.
+* **formatAll(micropubDocument)** – `preFormat`:s and formats everything. Returns a `Promise`that resolves to an object with the keys `filename`, `url`, `content` and `files`.
+* **preFormat(micropubDocument)** – takes a `micropubDocument` and ensures that all necessary parts are there. **Currently required** to run a `micropubDocument` through this method before handing it to the rest of the methods (except `formatAll()`).
 * **formatFilename(preformattedMicropubDocument)**  – returns a filename based on the data in the `micropubDocument`. Includes the relative path to the file – which currently is always `_posts/`
 * **formatURL(preformattedMicropubDocument)**  – returns the url the formatted content is expected to live on when published
 * **format(preformattedMicropubDocument)** – formats the actual content. Currently it's formatted as an HTML-file with [Jekyll Front Matter](http://jekyllrb.com/docs/frontmatter/). The content of the file is the `properties.content` of the `micropubDocument` – the rest of the data is put into the *front matter*.
