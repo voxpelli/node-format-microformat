@@ -198,7 +198,8 @@ describe('Formatter', function () {
     });
 
     it('should return absolute URL when requested', function () {
-      return formatter.formatURL(baseMicroformatData, 'http://example.com/foo/').should.eventually.equal('http://example.com/foo/2015/06/awesomeness-is-awesome/');
+      formatter = new Formatter('http://example.com/foo/');
+      return formatter.formatURL(baseMicroformatData).should.eventually.equal('http://example.com/foo/2015/06/awesomeness-is-awesome/');
     });
 
     it('should include derived category if any', function () {

@@ -17,6 +17,10 @@ var semiKebabCase = function (name) {
   return name.replace(camelRegexp, ' $1').trim().toLowerCase().replace(kebabRegexp, '-');
 };
 
+var Formatter = function (relativeTo) {
+  this.relativeTo = relativeTo;
+};
+
 Formatter.prototype._formatFrontMatter = function (data) {
   var source = data.properties;
   var derived = data.derived || {};
@@ -113,7 +117,7 @@ Formatter.prototype.formatFilename = function (data) {
   return Promise.resolve('_posts/' + strftime('%Y-%m', data.properties.published[0]) + (slug ? '-' + slug : '') + '.html');
 };
 
-Formatter.prototype.formatURL = function (data, relativeTo) {
+Formatter.prototype.formatURL = function (data) {
   var derived = data.derived || {};
 
   var slug = data.properties.slug[0];
@@ -123,8 +127,8 @@ Formatter.prototype.formatURL = function (data, relativeTo) {
     url = derived.category + '/' + url;
   }
 
-  if (relativeTo) {
-    url = urlModule.resolve(relativeTo, url);
+  if (this.relativeTo) {
+    url = urlModule.resolve(this.relativeTo, url);
   }
 
   return Promise.resolve(url);
