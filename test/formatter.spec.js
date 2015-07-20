@@ -240,6 +240,103 @@ describe('Formatter', function () {
       return formatter.preFormat(baseMicroformatData).should.eventually.not.have.deep.property('derived.category');
     });
 
+    it('should flag that the data has been preformatted', function () {
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.property('preFormatted', true);
+    });
+
+    it('should not preformat already preformatted data', function () {
+      return formatter.preFormat({ preFormatted: true }).should.eventually.deep.equal({ preFormatted: true });
+    });
+
+  });
+
+  describe('_formatFilesSlug', function () {
+
+    it('should handle a regular filename', function () {
+      formatter._formatFilesSlug('photo', { filename: 'example.jpg' }).should.equal('example.jpg');
+    });
+
+    it('should handle a complex filename', function () {
+      formatter._formatFilesSlug('photo', { filename: '123.ExampleIs Very-Cool.jpg' }).should.equal('123.example-is-very-cool.jpg');
+    });
+
+  });
+
+  describe('_preFormatFiles', function () {
+
+    it('should format files correctly', function () {
+      var bufferFoo = new Buffer('sampledata');
+
+      baseMicroformatData.files = {
+        photo: [
+          { filename: 'foo.jpg', buffer: bufferFoo },
+          { filename: 'bar.png', buffer: new Buffer('sampledata') },
+        ]
+      };
+
+      return formatter._preFormatFiles(baseMicroformatData)
+        .should.eventually
+        .have.property('files')
+        .that.is.an('array')
+        .of.length(2)
+        .that.deep.equals([
+          {
+            filename: 'media/2015-06-awesomeness-is-awesome/foo.jpg',
+            buffer: new Buffer('sampledata'),
+          },
+          {
+            filename: 'media/2015-06-awesomeness-is-awesome/bar.png',
+            buffer: new Buffer('sampledata'),
+          },
+        ])
+        .and.has.deep.property('[0].buffer', bufferFoo);
+    });
+
+    it('should format file URL:s correctly', function () {
+      baseMicroformatData.files = {
+        photo: [{ filename: 'foo.jpg', buffer: new Buffer('sampledata') }],
+        video: [{ filename: 'foo.mp4', buffer: new Buffer('sampledata') }],
+        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }],
+      };
+
+      return formatter._preFormatFiles(baseMicroformatData)
+        .should.eventually
+        .have.property('properties')
+        .that.contains.all.keys('photo', 'video', 'audio')
+        .and.have.property('video')
+        .that.deep.equals(['media/2015-06-awesomeness-is-awesome/foo.mp4']);
+    });
+
+    it('should make file URL:s absolute if relativeTo is defined', function () {
+      formatter = new Formatter('http://example.com/bar/');
+
+      baseMicroformatData.files = {
+        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }],
+      };
+
+      return formatter._preFormatFiles(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.audio')
+        .that.deep.equals(['http://example.com/bar/media/2015-06-awesomeness-is-awesome/foo.mp3']);
+    });
+
+    it('should honor any pre-existing URL:s', function () {
+      baseMicroformatData.properties.audio = ['http://example.com/pre-existing/url'];
+      baseMicroformatData.files = {
+        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }],
+      };
+
+      return formatter._preFormatFiles(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.audio')
+        .that.deep.equals([
+          'http://example.com/pre-existing/url',
+          'media/2015-06-awesomeness-is-awesome/foo.mp3',
+        ]);
+    });
+
+  });
+
   });
 
 });

@@ -42,11 +42,17 @@ formatter.preFormat(micropubDocument)
   });
 ```
 
+## Constructor
+
+`new MicropubFormatter([relativeTo])`
+
+* **relativeTo** – if set to a URL, then all formatted URL:s will be resolved to absolute URL:s relative to that one rather then be returned as relative ones.
+
 ## Methods
 
 * **preFormat(micropubDocument)** – takes a `micropubDocument` and ensures that all necessary parts are there. **Currently required** to run a `micropubDocument` through this method before handing it to the rest of the methods.
 * **formatFilename(preformattedMicropubDocument)**  – returns a filename based on the data in the `micropubDocument`. Includes the relative path to the file – which currently is always `_posts/`
-* **formatURL(preformattedMicropubDocument, [relativeTo])**  – returns the url the formatted content is expected to live on when published. Either a relative URL or an absolute one if `relativeTo` is set
+* **formatURL(preformattedMicropubDocument)**  – returns the url the formatted content is expected to live on when published
 * **format(preformattedMicropubDocument)** – formats the actual content. Currently it's formatted as an HTML-file with [Jekyll Front Matter](http://jekyllrb.com/docs/frontmatter/). The content of the file is the `properties.content` of the `micropubDocument` – the rest of the data is put into the *front matter*.
 
 ## Output formats
@@ -92,13 +98,23 @@ mf-like-of:
   - 'http://example.com/liked/page'
 ```
 
+### Files
+
+An array of objects with a `filename` containing the full path where the file should be uploaded as well as a `buffer` key containing the same buffer object that was part of the original `micropubDocument` files data. Also calculates URL:s for the location of the files post-upload and adds them to the proper `photo`, `video` or `audio` property in the `micropubDocument` so that they are made available in the `content`.
+
+Unlike the other formatting, file formatting happens fully in `preFormat()` as it needs to be done prior to the rest of the step to make the URL:s of the uploaded files available to the rest of the formatting.
+
+Currently supported file keys from the original `micropubDocument`: `photo`, `video` and `audio`
+
 ## Format of `micropubDocument`
 
 The format closely matches the [JSON-representation](http://indiewebcamp.com/Micropub#JSON_Syntax) of Micropub.
 
 See the [micropub-express](https://github.com/voxpelli/node-micropub-express#format-of-micropubdocument) module for documentation of this basic object.
 
-In addition to the properties defined by the `micropub-express` module, the `preFormat()` method adds a top level `derived` key that's used internally for values derived from 
+In addition to the properties defined by the `micropub-express` module, the `preFormat()` method adds a top level `derived` key that's used internally for values derived from.
+
+The `preFormat()` also flattens the `files` object into an array of files and formats the filenames to the full path where a file should be uploaded.
 
 ## Other useful modules
 

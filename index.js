@@ -88,8 +88,55 @@ Formatter.prototype._formatSlug = function (data) {
   return semiKebabCase(name);
 };
 
+Formatter.prototype._preFormatFiles = function (data) {
+  var that = this;
+  var fileResolves = [];
+
+  ['video', 'photo', 'audio'].forEach(function (type) {
+    (data.files[type] || []).forEach(function (file) {
+      fileResolves.push(Promise.all([
+        type,
+        file,
+        that.formatFilesFilename(type, file, data),
+        that.formatFilesURL(type, file, data),
+      ]));
+    });
+  });
+
+  return Promise.all(fileResolves).then(function (files) {
+    var newFiles = [];
+    _.each(files, function (file) {
+      var type = file[0];
+      var fileData = file[1];
+      var filename = file[2];
+      var url = file[3];
+
+      data.properties[type] = data.properties[type] || [];
+      data.properties[type].push(url);
+
+      newFiles.push({
+        filename: filename,
+        buffer: fileData.buffer,
+      });
+    });
+
+    data.files = newFiles;
+
+    return data;
+  });
+};
+
 Formatter.prototype.preFormat = function (data) {
-  data = _.cloneDeep(data);
+  if (data.preFormatted) {
+    return Promise.resolve(data);
+  }
+  data.preFormatted = true;
+
+  data = _.cloneDeep(data, function (value) {
+    if (value instanceof Buffer) {
+      return value;
+    }
+  });
 
   var slug = this._formatSlug(data);
 
@@ -105,7 +152,13 @@ Formatter.prototype.preFormat = function (data) {
     data.derived.category = 'bookmark';
   }
 
-  return Promise.resolve(data);
+  var result = Promise.resolve(data);
+
+  if (!_.isEmpty(data.files)) {
+    result = result.then(this._preFormatFiles.bind(this));
+  }
+
+  return result;
 };
 
 Formatter.prototype.format = function (data) {
@@ -132,6 +185,27 @@ Formatter.prototype.formatURL = function (data) {
   }
 
   return Promise.resolve(url);
+};
+
+Formatter.prototype._formatFilesSlug = function (type, file) {
+  return _.map(file.filename.trim().split('.'), semiKebabCase).join('.');
+};
+
+Formatter.prototype.formatFilesFilename = function (type, file, data) {
+  var slug = data.properties.slug[0];
+  var filename = this._formatFilesSlug(type, file);
+  return Promise.resolve('media/' + strftime('%Y-%m', data.properties.published[0])  + (slug ? '-' + slug : '') + '/' + filename);
+};
+
+Formatter.prototype.formatFilesURL = function (type, file, data) {
+  var that = this;
+
+  return this.formatFilesFilename(type, file, data).then(function (url) {
+    if (that.relativeTo) {
+      url = urlModule.resolve(that.relativeTo, url);
+    }
+    return url;
+  });
 };
 
 module.exports = Formatter;
