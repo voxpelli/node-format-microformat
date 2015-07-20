@@ -1,3 +1,29 @@
+## 0.2.0 (2015-07-20)
+
+
+#### Bug Fixes
+
+* **main:**
+  * make a custom kebab case converter ([07fce582](https://github.com/voxpelli/node-format-microformat/commit/07fce582568a31fa91c652ed41b0ad4ee3d10755))
+  * match details in URL:s and filenames ([aabb49fe](https://github.com/voxpelli/node-format-microformat/commit/aabb49fe5608f8d6736b04367b100a9ad298f820))
+
+
+#### Features
+
+* **main:**
+  * added the single-call formatAll() ([74b51df7](https://github.com/voxpelli/node-format-microformat/commit/74b51df7dd14db06f680379c38651702737f64b4))
+  * support formatting of files ([4431ee75](https://github.com/voxpelli/node-format-microformat/commit/4431ee750d34b7afe4afc8ad881e7408ebf7d272))
+  * make relativeTo an object property ([2144a899](https://github.com/voxpelli/node-format-microformat/commit/2144a899c9295e168a4cb77d8830fbaf42076cfc))
+
+
+#### Breaking Changes
+
+* make relativeTo an object property
+
+This makes it easier to ensure that all relative URL:s gets resolved to the same absolute one.
+ ([2144a899](https://github.com/voxpelli/node-format-microformat/commit/2144a899c9295e168a4cb77d8830fbaf42076cfc))
+
+
 ### 0.1.2 (2015-07-16)
 
 
