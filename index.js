@@ -9,8 +9,13 @@ var strftime = require('strftime');
 var ent = require('ent');
 
 var htmlRegexp = /<[^>]+>/g;
+var camelRegexp = /([A-Z])/g;
+var kebabRegexp = /[^a-z0-9]+/g;
 
-var Formatter = function () {};
+var semiKebabCase = function (name) {
+  // Convert camel case to spaces, then ensure everything is lower case and then finally – make kebab
+  return name.replace(camelRegexp, ' $1').trim().toLowerCase().replace(kebabRegexp, '-');
+};
 
 Formatter.prototype._formatFrontMatter = function (data) {
   var source = data.properties;
@@ -53,7 +58,7 @@ Formatter.prototype._formatContent = function (data) {
 
 Formatter.prototype._formatSlug = function (data) {
   if (data.properties.slug && data.properties.slug[0]) {
-    return _.kebabCase(data.properties.slug[0]);
+    return semiKebabCase(data.properties.slug[0]);
   }
 
   var name;
@@ -76,7 +81,7 @@ Formatter.prototype._formatSlug = function (data) {
     name = Math.floor(data.properties.published[0].getTime() / 1000) % (24 * 60 * 60) + '';
   }
 
-  return _.kebabCase(name);
+  return semiKebabCase(name);
 };
 
 Formatter.prototype.preFormat = function (data) {
