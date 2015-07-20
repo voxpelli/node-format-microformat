@@ -5,6 +5,7 @@
 [![Dependency Status](https://gemnasium.com/voxpelli/node-format-microformat.svg)](https://gemnasium.com/voxpelli/node-format-microformat)
 
 Formats a Microformat JSON representation into eg. a Jekyll post
+
 ## Requirements
 
 Requires io.js or Node 0.12
