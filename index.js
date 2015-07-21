@@ -14,7 +14,7 @@ var kebabRegexp = /[^a-z0-9]+/g;
 
 var semiKebabCase = function (name) {
   // Convert camel case to spaces, then ensure everything is lower case and then finally – make kebab
-  return name.replace(camelRegexp, '$1 $2').trim().toLowerCase().replace(kebabRegexp, '-');
+  return _.deburr(name).replace(camelRegexp, '$1 $2').trim().toLowerCase().replace(kebabRegexp, '-');
 };
 
 var Formatter = function (relativeTo) {

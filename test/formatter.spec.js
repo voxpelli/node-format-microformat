@@ -186,6 +186,11 @@ describe('Formatter', function () {
       formatter._formatSlug(baseMicroformatData).should.equal('another-css-feature-is-the-foo-bar');
     });
 
+    it('should properly handle swedish chars', function () {
+      baseMicroformatData.properties.name = ['ÖverÄnda på Slottet'];
+      formatter._formatSlug(baseMicroformatData).should.equal('over-anda-pa-slottet');
+    });
+
   });
 
   describe('formatFilename', function () {
