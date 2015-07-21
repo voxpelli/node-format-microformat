@@ -7,6 +7,7 @@ var urlModule = require('url');
 var yaml = require('js-yaml');
 var strftime = require('strftime');
 var ent = require('ent');
+var Upndown = require('upndown');
 
 var htmlRegexp = /<[^>]+>/g;
 var camelRegexp = /([a-z])([A-Z])/g;
@@ -17,8 +18,15 @@ var semiKebabCase = function (name) {
   return _.deburr(name).replace(camelRegexp, '$1 $2').trim().toLowerCase().replace(kebabRegexp, '-');
 };
 
-var Formatter = function (relativeTo) {
-  this.relativeTo = relativeTo;
+var Formatter = function (options) {
+  if (typeof options === 'string') {
+    options = { relativeTo: options };
+  } else {
+    options = _.extend({}, options || {});
+  }
+
+  this.relativeTo = options.relativeTo;
+  this.markdown = !options.noMarkdown;
 };
 
 Formatter.prototype._formatFrontMatter = function (data) {
@@ -57,7 +65,19 @@ Formatter.prototype._formatFrontMatter = function (data) {
 };
 
 Formatter.prototype._formatContent = function (data) {
-  return data.properties.content ? data.properties.content + '\n' : '';
+  if (!data.properties.content) {
+    return Promise.resolve('');
+  } else if (!this.markdown) {
+    return Promise.resolve(data.properties.content.join('\n') + '\n');
+  }
+
+  var und = new Upndown();
+
+  return new Promise(function (resolve) {
+    und.convert(data.properties.content.join('\n'), function (err, markdown) {
+      resolve((err ? data.properties.content : markdown) + '\n');
+    });
+  });
 };
 
 Formatter.prototype._formatSlug = function (data) {
@@ -166,12 +186,23 @@ Formatter.prototype.preFormat = function (data) {
 };
 
 Formatter.prototype.format = function (data) {
-  return Promise.resolve(this._formatFrontMatter(data) + this._formatContent(data));
+  return Promise.all([
+    this._formatFrontMatter(data),
+    this._formatContent(data),
+  ]).then(function (result) {
+    return result.join('');
+  });
 };
 
 Formatter.prototype.formatFilename = function (data) {
   var slug = data.properties.slug[0];
-  return Promise.resolve('_posts/' + strftime('%Y-%m-%d', data.properties.published[0]) + (slug ? '-' + slug : '') + '.html');
+
+  return Promise.resolve(
+    '_posts/' +
+    strftime('%Y-%m-%d', data.properties.published[0]) +
+    (slug ? '-' + slug : '') +
+    (this.markdown ? '.md' : '.html')
+  );
 };
 
 Formatter.prototype.formatURL = function (data) {

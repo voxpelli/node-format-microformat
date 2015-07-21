@@ -141,6 +141,41 @@ describe('Formatter', function () {
       );
     });
 
+    it('should convert HTML to Markdown', function () {
+      baseMicroformatData.properties.content = ['<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>'];
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: micropubpost\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        '---\n' +
+        'Abc\n' +
+        '\n' +
+        '123\n' +
+        '\n' +
+        '* Foo\n' +
+        '* Bar\n'
+      );
+    });
+
+    it('should not convert HTML to Markdown if opted out', function () {
+      baseMicroformatData.properties.content = ['<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>'];
+
+      formatter = new Formatter({ noMarkdown: true });
+
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: micropubpost\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        '---\n' +
+        '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>\n'
+      );
+    });
+
+
   });
 
   describe('_formatSlug', function () {
@@ -196,6 +231,11 @@ describe('Formatter', function () {
   describe('formatFilename', function () {
 
     it('should use slug', function () {
+      return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-30-awesomeness-is-awesome.md');
+    });
+
+    it('should have a HTML file type if opted out of Markdown', function () {
+      formatter = new Formatter({ noMarkdown: true });
       return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-30-awesomeness-is-awesome.html');
     });
 
@@ -375,7 +415,7 @@ describe('Formatter', function () {
         .should.eventually
         .have.all.keys('filename', 'url', 'content', 'files')
         .that.deep.equals({
-          filename: '_posts/2015-06-30-awesomeness-is-awesome.html',
+          filename: '_posts/2015-06-30-awesomeness-is-awesome.md',
           url: 'http://example.com/bar/2015/06/awesomeness-is-awesome/',
           content: '---\n' +
             'layout: micropubpost\n' +
