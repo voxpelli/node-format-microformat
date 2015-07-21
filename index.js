@@ -31,7 +31,7 @@ Formatter.prototype._formatFrontMatter = function (data) {
     title: null,
   };
 
-  //TODO: Make configurable?
+  //TODO: Handle "url" properties in a special way as well?
   var mapping = {
     name: 'title',
     slug: 'slug',
