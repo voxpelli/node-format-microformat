@@ -1,3 +1,15 @@
+### 0.2.2 (2015-07-21)
+
+
+#### Bug Fixes
+
+* **main:**
+  * map interactions to other categories ([6d617888](https://github.com/voxpelli/node-format-microformat/commit/6d617888b25a738d42504e4c733efc81fe044911))
+  * slug creation now handles foreign chars ([87f3d80a](https://github.com/voxpelli/node-format-microformat/commit/87f3d80a9765b1c8ec272b76d82edfc061529077))
+  * improved kebab casing ([874a1af7](https://github.com/voxpelli/node-format-microformat/commit/874a1af70e6bb2bd5f94aa10470aaae0a1176a40))
+  * support the "bookmark-of" as well ([d793dc89](https://github.com/voxpelli/node-format-microformat/commit/d793dc89c9f8596bb17f93d7467005f3ce26f209))
+
+
 ### 0.2.1 (2015-07-21)
 
 
