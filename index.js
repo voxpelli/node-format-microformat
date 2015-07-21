@@ -148,7 +148,7 @@ Formatter.prototype.preFormat = function (data) {
   if (!_.isEmpty(data.properties['in-reply-to']) || !_.isEmpty(data.properties['like-of'])) {
     data.derived.category = 'interaction';
   }
-  if (!_.isEmpty(data.properties.bookmark)) {
+  if (!_.isEmpty(data.properties.bookmark) || !_.isEmpty(data.properties['bookmark-of'])) {
     data.derived.category = 'bookmark';
   }
 
