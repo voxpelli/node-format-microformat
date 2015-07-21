@@ -181,6 +181,11 @@ describe('Formatter', function () {
       formatter._formatSlug(baseMicroformatData).should.equal('one-two-three-four-five');
     });
 
+    it('should properly format abbreviations', function () {
+      baseMicroformatData.properties.name = ['Another CSS-feature is the FooBar'];
+      formatter._formatSlug(baseMicroformatData).should.equal('another-css-feature-is-the-foo-bar');
+    });
+
   });
 
   describe('formatFilename', function () {

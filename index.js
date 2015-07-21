@@ -9,12 +9,12 @@ var strftime = require('strftime');
 var ent = require('ent');
 
 var htmlRegexp = /<[^>]+>/g;
-var camelRegexp = /([A-Z])/g;
+var camelRegexp = /([a-z])([A-Z])/g;
 var kebabRegexp = /[^a-z0-9]+/g;
 
 var semiKebabCase = function (name) {
   // Convert camel case to spaces, then ensure everything is lower case and then finally – make kebab
-  return name.replace(camelRegexp, ' $1').trim().toLowerCase().replace(kebabRegexp, '-');
+  return name.replace(camelRegexp, '$1 $2').trim().toLowerCase().replace(kebabRegexp, '-');
 };
 
 var Formatter = function (relativeTo) {
