@@ -231,19 +231,29 @@ describe('Formatter', function () {
       return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('properties.slug[0]', 'awesomeness-is-awesome');
     });
 
-    it('should derive interaction category for replies', function () {
+    it('should derive social category for replies', function () {
       baseMicroformatData.properties['in-reply-to'] = ['http://example.com/replied/to/page'];
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'interaction');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'social');
     });
 
-    it('should derive interaction category for likes', function () {
+    it('should derive social category for likes', function () {
       baseMicroformatData.properties['like-of'] = ['http://example.com/liked/page'];
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'interaction');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'social');
     });
 
-    it('should derive bookmark category for bookmarks', function () {
+    it('should derive link category for bookmarks', function () {
       baseMicroformatData.properties.bookmark = ['http://example.com/bookmarked/page'];
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'bookmark');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'link');
+    });
+
+    it('should derive link category for alternative bookmark property', function () {
+      baseMicroformatData.properties['bookmark-of'] = ['http://example.com/bookmarked/page'];
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'link');
+    });
+
+    it('should derive link category for reposts', function () {
+      baseMicroformatData.properties['repost-of'] = ['http://example.com/reposted/page'];
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'link');
     });
 
     it('should not derive interaction category for normal post', function () {
