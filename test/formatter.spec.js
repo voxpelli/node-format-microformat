@@ -109,6 +109,26 @@ describe('Formatter', function () {
       );
     });
 
+    it('should ignore urls', function () {
+      //TODO: We might want to eventually change this and actually expose the URL to Jekyll as the prefered permalink
+      //      But when doing so we should also treat the URL as a unique identifier and make sure to replace any
+      //      previous file that might have that same explicit or implied URL.
+      //      For now we don't have any such logic and thus we should simply just ignore this property until it can
+      //      be handled better.
+
+      baseMicroformatData.properties.url = ['http://example.com/'];
+
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: micropubpost\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        '---\n' +
+        'hello world\n'
+      );
+    });
+
     it('should handle a "like" document', function () {
       delete baseMicroformatData.properties.name;
       delete baseMicroformatData.properties.content;

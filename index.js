@@ -39,13 +39,12 @@ Formatter.prototype._formatFrontMatter = function (data) {
     title: null,
   };
 
-  //TODO: Handle "url" properties in a special way as well?
   var mapping = {
     name: 'title',
     slug: 'slug',
     category: 'tags',
   };
-  var ignore = ['content', 'published'];
+  var ignore = ['content', 'published', 'url'];
 
   _.forEach(source, function (value, key) {
     if (!value.length || ignore.indexOf(key) !== -1) { return; }
