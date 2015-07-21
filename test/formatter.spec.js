@@ -420,11 +420,13 @@ describe('Formatter', function () {
   describe('formatAll', function () {
 
     it('should format everything correctly', function () {
+      var photoBuffer = new Buffer('sampledata');
+
       baseMicroformatData.files = {
         photo: [
           {
             filename: 'bar.png',
-            buffer: new Buffer('sampledata')
+            buffer: photoBuffer,
           }
         ]
       };
@@ -433,7 +435,7 @@ describe('Formatter', function () {
 
       return formatter.formatAll(baseMicroformatData, 'http://example.com/bar/')
         .should.eventually
-        .have.all.keys('filename', 'url', 'content', 'files')
+        .have.all.keys('filename', 'url', 'content', 'files', 'raw')
         .that.deep.equals({
           filename: '_posts/2015-06-30-awesomeness-is-awesome.md',
           url: 'http://example.com/bar/2015/06/awesomeness-is-awesome/',
@@ -446,12 +448,27 @@ describe('Formatter', function () {
             '  - \'http://example.com/bar/media/2015-06-awesomeness-is-awesome/bar.png\'\n' +
             '---\n' +
             'hello world\n',
-          files: [
-            {
+          files: [{
+            filename: 'media/2015-06-awesomeness-is-awesome/bar.png',
+            buffer: photoBuffer,
+          }],
+          raw: {
+            derived: {},
+            files: [{
               filename: 'media/2015-06-awesomeness-is-awesome/bar.png',
-              buffer: new Buffer('sampledata'),
-            }
-          ],
+              buffer: photoBuffer,
+            }],
+            preFormatted: true,
+            properties: {
+              content: ['hello world'],
+              name: ['awesomeness is awesome'],
+              photo: ['http://example.com/bar/media/2015-06-awesomeness-is-awesome/bar.png'],
+              published: [new Date(1435674841000)],
+              slug: ['awesomeness-is-awesome'],
+            },
+            type: ['h-entry'],
+          }
+
         });
     });
 

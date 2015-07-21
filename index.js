@@ -252,6 +252,7 @@ Formatter.prototype.formatAll = function (data) {
         that.formatURL(formattedData, that.relativeTo),
         that.format(formattedData),
         formattedData.files,
+        formattedData,
       ]);
     })
     .then(function (result) {
@@ -260,6 +261,7 @@ Formatter.prototype.formatAll = function (data) {
         url:      result[1],
         content:  result[2],
         files:    result[3],
+        raw:      result[4],
       };
     });
 };

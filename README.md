@@ -66,7 +66,7 @@ formatter.preFormat(micropubDocument)
 
 ## Methods
 
-* **formatAll(micropubDocument)** – `preFormat`:s and formats everything. Returns a `Promise`that resolves to an object with the keys `filename`, `url`, `content` and `files`.
+* **formatAll(micropubDocument)** – `preFormat`:s and formats everything. Returns a `Promise`that resolves to an object with the keys `filename`, `url`, `content`, `files` and `raw`.
 * **preFormat(micropubDocument)** – takes a `micropubDocument` and ensures that all necessary parts are there. **Currently required** to run a `micropubDocument` through this method before handing it to the rest of the methods (except `formatAll()`).
 * **formatFilename(preformattedMicropubDocument)**  – returns a filename based on the data in the `micropubDocument`. Includes the relative path to the file – which currently is always `_posts/`
 * **formatURL(preformattedMicropubDocument)**  – returns the url the formatted content is expected to live on when published
