@@ -1,3 +1,11 @@
+### 0.2.1 (2015-07-21)
+
+
+#### Bug Fixes
+
+* **main:** restore original full date in filenames ([073512fe](https://github.com/voxpelli/node-format-microformat/commit/073512fe41cf9cc9557a58df23e777a5f2789b08))
+
+
 ## 0.2.0 (2015-07-20)
 
 
