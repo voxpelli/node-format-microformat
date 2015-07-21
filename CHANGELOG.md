@@ -1,3 +1,11 @@
+## 0.3.0 (2015-07-21)
+
+
+#### Features
+
+* **main:** convert HTML to markdown ([721b3523](https://github.com/voxpelli/node-format-microformat/commit/721b352377f09509c99ad84b0ab42c94ce705b49))
+
+
 ### 0.2.2 (2015-07-21)
 
 
