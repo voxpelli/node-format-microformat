@@ -246,6 +246,12 @@ describe('Formatter', function () {
       formatter._formatSlug(baseMicroformatData).should.equal('over-anda-pa-slottet');
     });
 
+    it('should ensure slug doesnt start or end with a dash', function () {
+      delete baseMicroformatData.properties.name;
+      baseMicroformatData.properties.content = [',One Two Three Four Five, Six Seven'];
+      formatter._formatSlug(baseMicroformatData).should.equal('one-two-three-four-five');
+    });
+
   });
 
   describe('formatFilename', function () {

@@ -12,10 +12,17 @@ var Upndown = require('upndown');
 var htmlRegexp = /<[^>]+>/g;
 var camelRegexp = /([a-z])([A-Z])/g;
 var kebabRegexp = /[^a-z0-9]+/g;
+var whitespaceRegexp = /\s+/g;
 
 var semiKebabCase = function (name) {
   // Convert camel case to spaces, then ensure everything is lower case and then finally – make kebab
-  return _.deburr(name).replace(camelRegexp, '$1 $2').trim().toLowerCase().replace(kebabRegexp, '-');
+  return _.deburr(name)
+    .replace(camelRegexp, '$1 $2')
+    .trim()
+    .toLowerCase()
+    .replace(kebabRegexp, ' ')
+    .trim()
+    .replace(whitespaceRegexp, '-');
 };
 
 var Formatter = function (options) {
