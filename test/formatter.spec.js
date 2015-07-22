@@ -301,6 +301,12 @@ describe('Formatter', function () {
       return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'social');
     });
 
+    it('should derive social category for notes', function () {
+      delete baseMicroformatData.properties.name;
+      delete baseMicroformatData.properties.slug;
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'social');
+    });
+
     it('should derive link category for bookmarks', function () {
       baseMicroformatData.properties.bookmark = ['http://example.com/bookmarked/page'];
       return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'link');
@@ -313,6 +319,13 @@ describe('Formatter', function () {
 
     it('should derive link category for reposts', function () {
       baseMicroformatData.properties['repost-of'] = ['http://example.com/reposted/page'];
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'link');
+    });
+
+    it('should derive link category for title-less bookmarks', function () {
+      delete baseMicroformatData.properties.name;
+      delete baseMicroformatData.properties.slug;
+      baseMicroformatData.properties.bookmark = ['http://example.com/bookmarked/page'];
       return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'link');
     });
 
