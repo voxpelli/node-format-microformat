@@ -1,3 +1,18 @@
+### 0.3.1 (2015-07-22)
+
+
+#### Bug Fixes
+
+* **main:**
+  * categorize "notes" as social activity ([5a991355](https://github.com/voxpelli/node-format-microformat/commit/5a9913557251df85e0e98a2b477126ee7ae5de22))
+  * ignore url properties ([4c8b007b](https://github.com/voxpelli/node-format-microformat/commit/4c8b007b253eb1baeb23e5a6b5659f8cafe4b933))
+
+
+#### Features
+
+* **main:** expose preformatted data in formatAll ([f0fd23f6](https://github.com/voxpelli/node-format-microformat/commit/f0fd23f62220eb5a41c3b17f08a37e5cfbe28c9b))
+
+
 ## 0.3.0 (2015-07-21)
 
 
