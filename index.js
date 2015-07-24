@@ -41,6 +41,8 @@ Formatter.prototype._formatFrontMatter = function (data) {
   var source = data.properties;
   var derived = data.derived || {};
 
+  //TODO: Include the "type" property so that more than the now assumed "h-entry" can be supported
+
   var target = {
     layout: 'micropubpost',
     date: source.published[0].toISOString(),
