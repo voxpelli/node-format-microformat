@@ -34,6 +34,7 @@ var Formatter = function (options) {
 
   this.relativeTo = options.relativeTo;
   this.markdown = !options.noMarkdown;
+  this.contentSlug = !!options.contentSlug;
   this.defaults = options.defaults;
 };
 
@@ -100,7 +101,7 @@ Formatter.prototype._formatSlug = function (data) {
   if (data.properties.name) {
     name = data.properties.name[0].trim();
   }
-  if (!name && data.properties.content) {
+  if (!name && data.properties.content && this.contentSlug) {
     name = data.properties.content[0].trim();
     name = ent.decode(name.replace(htmlRegexp, ''));
   }
