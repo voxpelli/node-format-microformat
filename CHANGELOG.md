@@ -1,3 +1,21 @@
+### 0.3.2 (2015-07-24)
+
+
+#### Bug Fixes
+
+* **main:**
+  * preformat publish time before slug ([b8c7813b](https://github.com/voxpelli/node-format-microformat/commit/b8c7813b14bf0848f40d456afd5b1c0564ff8f11))
+  * by default don't base slug on content ([affb0f73](https://github.com/voxpelli/node-format-microformat/commit/affb0f7361e32feac9098ada20c7f4cf310eb8f7))
+  * avoid dashes in beginning/end of slug ([39508870](https://github.com/voxpelli/node-format-microformat/commit/39508870ed929c9eb11eb4404ab0ca381c39b653))
+
+
+#### Features
+
+* **main:**
+  * expose language in top Front Matter ([1de72fb7](https://github.com/voxpelli/node-format-microformat/commit/1de72fb7c95809b2f3ed77853d0de32653940249))
+  * make it possible to define defaults ([072455ef](https://github.com/voxpelli/node-format-microformat/commit/072455ef7c6776ba9502bb56be294b771f50107b))
+
+
 ### 0.3.1 (2015-07-22)
 
 
