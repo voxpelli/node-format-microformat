@@ -347,6 +347,34 @@ describe('Formatter', function () {
       return formatter.preFormat({ preFormatted: true }).should.eventually.deep.equal({ preFormatted: true });
     });
 
+    it('should add defaults when such are defined', function () {
+      formatter = new Formatter({
+        defaults: {
+          properties: {
+            lang: ['en'],
+          }
+        },
+      });
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.lang')
+        .that.deep.equals(['en']);
+    });
+
+    it('should not add defaults when value already exists', function () {
+      formatter = new Formatter({
+        defaults: {
+          properties: {
+            content: ['some default content'],
+          }
+        },
+      });
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.content')
+        .that.deep.equals(['hello world']);
+    });
+
   });
 
   describe('_formatFilesSlug', function () {

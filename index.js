@@ -34,6 +34,7 @@ var Formatter = function (options) {
 
   this.relativeTo = options.relativeTo;
   this.markdown = !options.noMarkdown;
+  this.defaults = options.defaults;
 };
 
 Formatter.prototype._formatFrontMatter = function (data) {
@@ -184,6 +185,8 @@ Formatter.prototype.preFormat = function (data) {
   ) {
     data.derived.category = 'social';
   }
+
+  _.defaultsDeep(data, this.defaults || {});
 
   var result = Promise.resolve(data);
 
