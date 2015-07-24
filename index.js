@@ -51,6 +51,7 @@ Formatter.prototype._formatFrontMatter = function (data) {
     name: 'title',
     slug: 'slug',
     category: 'tags',
+    lang: 'lang',
   };
   var ignore = ['content', 'published', 'url'];
 
