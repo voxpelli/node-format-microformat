@@ -238,7 +238,7 @@ describe('Formatter', function () {
       formatter._formatSlug(baseMicroformatData).should.equal('foo-bar-abc');
     });
 
-    it('should ulimately fall back to publish time', function () {
+    it('should ultimately fall back to publish time', function () {
       delete baseMicroformatData.properties.name;
       formatter._formatSlug(baseMicroformatData).should.equal('52441');
     });
@@ -392,6 +392,18 @@ describe('Formatter', function () {
         .have.deep.property('properties.content')
         .that.deep.equals(['hello world']);
     });
+
+    it('should be able to base slug on default publish times', function () {
+      delete baseMicroformatData.properties.name;
+      delete baseMicroformatData.properties.published;
+      delete baseMicroformatData.properties.slug;
+
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.slug')
+        .that.deep.equals(['51600']);
+    });
+
 
   });
 

@@ -169,10 +169,10 @@ Formatter.prototype.preFormat = function (data) {
     }
   });
 
-  var slug = this._formatSlug(data);
-
-  data.properties.slug = slug ? [slug] : [];
   data.properties.published = [data.properties.published && data.properties.published[0] ? new Date(data.properties.published[0]) : new Date()];
+
+  var slug = this._formatSlug(data);
+  data.properties.slug = slug ? [slug] : [];
 
   data.derived = {};
 
