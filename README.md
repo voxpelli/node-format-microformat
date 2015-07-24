@@ -60,9 +60,14 @@ formatter.preFormat(micropubDocument)
 
 ## Constructor
 
-`new MicropubFormatter([relativeTo])`
+`new MicropubFormatter([options])`
+
+### Options
 
 * **relativeTo** – if set to a URL, then all formatted URL:s will be resolved to absolute URL:s relative to that one rather then be returned as relative ones.
+* **noMarkdown** – if set to `true` then no conversion to Markdown will happen for the content.
+* **contentSlug** – if set to `true`, then the slug creation will use the `properties.content` data as a fallback to `properties.name` prior to basing the slug on the timestamp.
+* **defaults** – a `micropubDocument` with defaults that will be added as part of the `preFormat()`. Useful to eg. ensure that all documents have a language explicitly set.
 
 ## Methods
 
