@@ -1,3 +1,16 @@
+## 0.4.0 (2015-07-26)
+
+
+#### Bug Fixes
+
+* **main:** rename "link" to "links" ([bd30567c](https://github.com/voxpelli/node-format-microformat/commit/bd30567c57e0caeadd1ee9dc848cd2f08842b9ce))
+
+
+#### Features
+
+* **main:** optin: if no language, autodetect it ([bbfc567b](https://github.com/voxpelli/node-format-microformat/commit/bbfc567bf52154240a511ea3c94d8bc76dcb6b43))
+
+
 ### 0.3.2 (2015-07-24)
 
 
