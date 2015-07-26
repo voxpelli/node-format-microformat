@@ -181,7 +181,7 @@ Formatter.prototype.preFormat = function (data) {
     !_.isEmpty(data.properties['repost-of']) ||
     !_.isEmpty(data.properties['bookmark-of'])
   ) {
-    data.derived.category = 'link';
+    data.derived.category = 'links';
   } else if (
     _.isEmpty(data.properties.name) || // This means it's not an "article", but a "note"
     !_.isEmpty(data.properties['in-reply-to']) ||
