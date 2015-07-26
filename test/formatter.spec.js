@@ -404,6 +404,73 @@ describe('Formatter', function () {
         .that.deep.equals(['51600']);
     });
 
+    it('should derive english language from content', function () {
+      baseMicroformatData.properties.content = ['Another evening at the cottage and Bob was feeling brave. Make some food by himself? Surely, how hard could it be. But as the night went on and the dinner cooked Bob grew ever more desperate. Pepper, salt – all these crazy names of things he had never heard before. It would be a long night for poor Mr Bob.'];
+
+      formatter = new Formatter({
+        deriveLanguages: ['eng', 'swe'],
+      });
+
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.lang')
+        .that.deep.equals(['en']);
+    });
+
+    it('should derive swedish language from content', function () {
+      baseMicroformatData.properties.content = ['Det var en gång en liten utter som hette Skog. Något ironiskt så för skog var allt annat än det som fanns kvar efter att Skog haft sin framfart i sitt grannskap. Varenda liten plätt var kal som åker. Men Skog var inte ledsen för det. Han hade ju trots allt sig själv.'];
+
+      formatter = new Formatter({
+        deriveLanguages: ['eng', 'swe'],
+      });
+
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.lang')
+        .that.deep.equals(['sv']);
+    });
+
+    it('should require opt in for language detection', function () {
+      baseMicroformatData.properties.content = ['Det var en gång en liten utter som hette Skog. Något ironiskt så för skog var allt annat än det som fanns kvar efter att Skog haft sin framfart i sitt grannskap. Varenda liten plätt var kal som åker. Men Skog var inte ledsen för det. Han hade ju trots allt sig själv.'];
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .not.have.deep.property('properties.lang');
+    });
+
+    it('should not require a whitelist for language detection', function () {
+      baseMicroformatData.properties.content = ['Du hast mich einen käse mit orangen saft gekaufen.'];
+
+      formatter = new Formatter({
+        deriveLanguages: true,
+      });
+
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.lang')
+        .that.deep.equals(['de']);
+    });
+
+    it('should respect defined language, but convert to ISO 639-1', function () {
+      baseMicroformatData.properties.content = ['Det var en gång en liten utter som hette Skog. Något ironiskt så för skog var allt annat än det som fanns kvar efter att Skog haft sin framfart i sitt grannskap. Varenda liten plätt var kal som åker. Men Skog var inte ledsen för det. Han hade ju trots allt sig själv.'];
+      baseMicroformatData.properties.lang = ['eng'];
+
+      formatter = new Formatter({
+        deriveLanguages: ['eng', 'swe'],
+      });
+
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.lang')
+        .that.deep.equals(['en']);
+    });
+
+    it('should respect unknown languages', function () {
+      baseMicroformatData.properties.lang = ['123'];
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.lang')
+        .that.deep.equals(['123']);
+    });
 
   });
 

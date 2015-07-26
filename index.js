@@ -8,6 +8,8 @@ var yaml = require('js-yaml');
 var strftime = require('strftime');
 var ent = require('ent');
 var Upndown = require('upndown');
+var franc = require('franc');
+var iso6393 = require('iso-639-3');
 
 var htmlRegexp = /<[^>]+>/g;
 var camelRegexp = /([a-z])([A-Z])/g;
@@ -36,6 +38,7 @@ var Formatter = function (options) {
   this.markdown = !options.noMarkdown;
   this.contentSlug = !!options.contentSlug;
   this.defaults = options.defaults;
+  this.deriveLanguages = options.deriveLanguages || false;
 };
 
 Formatter.prototype._formatFrontMatter = function (data) {
@@ -173,6 +176,36 @@ Formatter.prototype.preFormat = function (data) {
 
   var slug = this._formatSlug(data);
   data.properties.slug = slug ? [slug] : [];
+
+  var strippedContent, estimatedLang;
+  if (_.isEmpty(data.properties.lang) && this.deriveLanguages && !_.isEmpty(data.properties.content)) {
+    strippedContent = ((data.properties.content || [])[0] || '')
+      .replace(htmlRegexp, ' ')
+      .replace(whitespaceRegexp, ' ')
+      .trim();
+
+    if (strippedContent !== '') {
+      estimatedLang = franc(strippedContent, this.deriveLanguages === true ? {} : { whitelist : this.deriveLanguages });
+    }
+
+    if (estimatedLang && (this.deriveLanguages === true || this.deriveLanguages.indexOf(estimatedLang) !== -1)) {
+      data.properties.lang = [estimatedLang];
+    }
+  }
+
+  if (_.isArray(data.properties.lang)) {
+    data.properties.lang = _.map(data.properties.lang, function (lang) {
+      if (!lang || lang.length !== 3) { return lang; }
+
+      var code = iso6393.get(lang);
+
+      if (code) {
+        return code.iso6391;
+      }
+
+      return lang;
+    });
+  }
 
   data.derived = {};
 
