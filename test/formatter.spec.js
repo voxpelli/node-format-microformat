@@ -450,6 +450,18 @@ describe('Formatter', function () {
         .that.deep.equals(['de']);
     });
 
+    it('should hanbdle undetectable language', function () {
+      baseMicroformatData.properties.content = ['Nope'];
+
+      formatter = new Formatter({
+        deriveLanguages: true,
+      });
+
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .not.have.deep.property('properties.lang');
+    });
+
     it('should respect defined language, but convert to ISO 639-1', function () {
       baseMicroformatData.properties.content = ['Det var en gång en liten utter som hette Skog. Något ironiskt så för skog var allt annat än det som fanns kvar efter att Skog haft sin framfart i sitt grannskap. Varenda liten plätt var kal som åker. Men Skog var inte ledsen för det. Han hade ju trots allt sig själv.'];
       baseMicroformatData.properties.lang = ['eng'];

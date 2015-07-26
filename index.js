@@ -188,7 +188,7 @@ Formatter.prototype.preFormat = function (data) {
       estimatedLang = franc(strippedContent, this.deriveLanguages === true ? {} : { whitelist : this.deriveLanguages });
     }
 
-    if (estimatedLang && (this.deriveLanguages === true || this.deriveLanguages.indexOf(estimatedLang) !== -1)) {
+    if (estimatedLang && estimatedLang !== 'und' && (this.deriveLanguages === true || this.deriveLanguages.indexOf(estimatedLang) !== -1)) {
       data.properties.lang = [estimatedLang];
     }
   }
