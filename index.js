@@ -15,6 +15,7 @@ var htmlRegexp = /<[^>]+>/g;
 var camelRegexp = /([a-z])([A-Z])/g;
 var kebabRegexp = /[^a-z0-9]+/g;
 var whitespaceRegexp = /\s+/g;
+var httpRegexp = /^http(s?):\/\//;
 
 var semiKebabCase = function (name) {
   // Convert camel case to spaces, then ensure everything is lower case and then finally – make kebab
@@ -73,6 +74,9 @@ Formatter.prototype._formatFrontMatter = function (data) {
 
   if (derived.category) {
     target.category = derived.category;
+  }
+  if (derived.personTags) {
+    target.persontags = derived.personTags;
   }
 
   return '---\n' + yaml.safeDump(target) + '---\n';
@@ -208,6 +212,22 @@ Formatter.prototype.preFormat = function (data) {
   }
 
   data.derived = {};
+
+  if (!_.isEmpty(data.properties.category)) {
+    data.derived.personTags = [];
+
+    data.properties.category = _.filter(data.properties.category, function (tag) {
+      if (httpRegexp.test(tag)) {
+        data.derived.personTags.push(tag);
+        return false;
+      }
+      return true;
+    });
+
+    if (_.isEmpty(data.derived.personTags)) {
+      delete data.derived.personTags;
+    }
+  }
 
   if (
     !_.isEmpty(data.properties.bookmark) ||

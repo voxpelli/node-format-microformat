@@ -176,6 +176,22 @@ describe('Formatter', function () {
       );
     });
 
+    it('should handle derived person-tags', function () {
+      baseMicroformatData.derived = { personTags: ['http://example.com/'] };
+
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: micropubpost\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        'persontags:\n' +
+        '  - \'http://example.com/\'\n' +
+        '---\n' +
+        'hello world\n'
+      );
+    });
+
     it('should convert HTML to Markdown', function () {
       baseMicroformatData.properties.content = ['<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>'];
       return formatter.format(baseMicroformatData).should.eventually.equal(
@@ -355,6 +371,17 @@ describe('Formatter', function () {
 
     it('should not derive interaction category for normal post', function () {
       return formatter.preFormat(baseMicroformatData).should.eventually.not.have.deep.property('derived.category');
+    });
+
+    it('should extract person tags from regular tags', function () {
+      baseMicroformatData.properties.category = ['http://example.com/', 'foo', 'http://example.net/'];
+      return formatter.preFormat(baseMicroformatData).then(function (result) {
+        result.should.have.deep.property('derived.personTags').that.deep.equals([
+          'http://example.com/',
+          'http://example.net/',
+        ]);
+        result.should.have.deep.property('properties.category').that.deep.equals(['foo']);
+      });
     });
 
     it('should flag that the data has been preformatted', function () {
