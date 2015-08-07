@@ -1,3 +1,16 @@
+### 0.4.1 (2015-08-07)
+
+
+#### Bug Fixes
+
+* **main:** should detect undetectable language ([b5134b5f](https://github.com/voxpelli/node-format-microformat/commit/b5134b5fbc1d5f782e6aee6c2823effe64b2f6a9))
+
+
+#### Features
+
+* **main:** extract person tags from categories ([c245871f](https://github.com/voxpelli/node-format-microformat/commit/c245871f2e18fe514436cfbdad1ef240bea615c9))
+
+
 ## 0.4.0 (2015-07-26)
 
 
