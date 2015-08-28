@@ -1,3 +1,11 @@
+## 0.5.0 (2015-08-28)
+
+
+#### Features
+
+* **main:** require content.html for html content ([962e66a8](https://github.com/voxpelli/node-format-microformat/commit/962e66a89533f614a5b6f2583d8480157847da29))
+
+
 ### 0.4.1 (2015-08-07)
 
 
