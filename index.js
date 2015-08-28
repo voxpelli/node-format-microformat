@@ -83,19 +83,33 @@ Formatter.prototype._formatFrontMatter = function (data) {
 };
 
 Formatter.prototype._formatContent = function (data) {
-  if (!data.properties.content) {
-    return Promise.resolve('');
-  } else if (!this.markdown) {
-    return Promise.resolve(data.properties.content.join('\n') + '\n');
-  }
+  var content = data.properties.content;
 
-  var und = new Upndown();
+  if (!content) { return Promise.resolve(''); }
 
-  return new Promise(function (resolve) {
-    und.convert(data.properties.content.join('\n'), function (err, markdown) {
-      resolve((err ? data.properties.content : markdown) + '\n');
+  content = [].concat(content);
+
+  var und = new Upndown(), self = this;
+
+  if (_.isArray(content)) {
+    return Promise.all(content.map(function (content) {
+      if (!_.isObject(content)) {
+        content = { value: content };
+      }
+
+      if (content.html) {
+        return self.markdown ? new Promise(function (resolve) {
+          und.convert(content.html, function (err, markdown) {
+            resolve(err ? content.html : markdown);
+          });
+        }) : content.html;
+      }
+
+      return _.escape(content.value || '');
+    })).then(function (result) {
+      return _.filter(result).join('\n') + '\n';
     });
-  });
+  }
 };
 
 Formatter.prototype._formatSlug = function (data) {

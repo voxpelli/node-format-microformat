@@ -193,7 +193,7 @@ describe('Formatter', function () {
     });
 
     it('should convert HTML to Markdown', function () {
-      baseMicroformatData.properties.content = ['<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>'];
+      baseMicroformatData.properties.content = [{ html: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' }];
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
         'layout: micropubpost\n' +
@@ -211,7 +211,7 @@ describe('Formatter', function () {
     });
 
     it('should not convert HTML to Markdown if opted out', function () {
-      baseMicroformatData.properties.content = ['<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>'];
+      baseMicroformatData.properties.content = [{ html: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' }];
 
       formatter = new Formatter({ noMarkdown: true });
 
@@ -226,6 +226,40 @@ describe('Formatter', function () {
       );
     });
 
+    it('should escape HTML if sent as plain text', function () {
+      baseMicroformatData.properties.content = ['<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>'];
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: micropubpost\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        '---\n' +
+        '&lt;p&gt;Abc&lt;/p&gt;&lt;p&gt;123&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Foo&lt;/li&gt;&lt;li&gt;Bar&lt;/li&gt;&lt;/ul&gt;\n'
+      );
+    });
+
+    it('should support content.value', function () {
+      baseMicroformatData.properties.content = [
+        { html: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' },
+        { value: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' },
+      ];
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: micropubpost\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        '---\n' +
+        'Abc\n' +
+        '\n' +
+        '123\n' +
+        '\n' +
+        '* Foo\n' +
+        '* Bar\n' +
+        '&lt;p&gt;Abc&lt;/p&gt;&lt;p&gt;123&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Foo&lt;/li&gt;&lt;li&gt;Bar&lt;/li&gt;&lt;/ul&gt;\n'
+      );
+    });
 
   });
 
