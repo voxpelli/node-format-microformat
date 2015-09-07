@@ -17,6 +17,22 @@ var kebabRegexp = /[^a-z0-9]+/g;
 var whitespaceRegexp = /\s+/g;
 var httpRegexp = /^http(s?):\/\//;
 
+var getMfValue = function (data) {
+  return _(data || [])
+    .map(function (item) {
+      if (!item) { return; }
+      if (item.value) { return item.value; }
+      if (item.html) {
+        return ent.decode(item.html.replace(htmlRegexp, ' '))
+          .replace(whitespaceRegexp, ' ')
+          .trim();
+      }
+      if (_.isString(item)) { return item; }
+    })
+    .filter()
+    .value();
+};
+
 var semiKebabCase = function (name) {
   // Convert camel case to spaces, then ensure everything is lower case and then finally – make kebab
   return _.deburr(name)
@@ -122,9 +138,8 @@ Formatter.prototype._formatSlug = function (data) {
   if (data.properties.name) {
     name = data.properties.name[0].trim();
   }
-  if (!name && data.properties.content && this.contentSlug) {
-    name = data.properties.content[0].trim();
-    name = ent.decode(name.replace(htmlRegexp, ''));
+  if (!name && !_.isEmpty(data.properties.content) && this.contentSlug) {
+    name = getMfValue(data.properties.content).join('\n');
   }
 
   if (name) {
@@ -197,10 +212,7 @@ Formatter.prototype.preFormat = function (data) {
 
   var strippedContent, estimatedLang;
   if (_.isEmpty(data.properties.lang) && this.deriveLanguages && !_.isEmpty(data.properties.content)) {
-    strippedContent = ((data.properties.content || [])[0] || '')
-      .replace(htmlRegexp, ' ')
-      .replace(whitespaceRegexp, ' ')
-      .trim();
+    strippedContent = getMfValue(data.properties.content).join('\n');
 
     if (strippedContent !== '') {
       estimatedLang = franc(strippedContent, this.deriveLanguages === true ? {} : { whitelist : this.deriveLanguages });

@@ -281,7 +281,7 @@ describe('Formatter', function () {
 
     it('should ignore html-tags when basing slug on content', function () {
       delete baseMicroformatData.properties.name;
-      baseMicroformatData.properties.content = ['<h1>Foo</h1> Bar &amp; <strong>Abc</strong>'];
+      baseMicroformatData.properties.content = [{html: '<h1>Foo</h1> Bar &amp; <strong>Abc</strong>'}];
       formatter = new Formatter({ contentSlug: true });
       // Test twice so that we don't get a non-reusable regexp!
       formatter._formatSlug(baseMicroformatData).should.equal('foo-bar-abc');
@@ -511,7 +511,7 @@ describe('Formatter', function () {
         .that.deep.equals(['de']);
     });
 
-    it('should hanbdle undetectable language', function () {
+    it('should handle undetectable language', function () {
       baseMicroformatData.properties.content = ['Nope'];
 
       formatter = new Formatter({
@@ -543,6 +543,19 @@ describe('Formatter', function () {
         .should.eventually
         .have.deep.property('properties.lang')
         .that.deep.equals(['123']);
+    });
+
+    it('should derive english language from HTML content', function () {
+      baseMicroformatData.properties.content = [{html: 'Another evening at the cottage and Bob was feeling brave. Make some food by himself? Surely, how hard could it be. But as the night went on and the dinner cooked Bob grew ever more desperate. Pepper, salt – all these crazy names of things he had never heard before. It would be a long night for poor Mr Bob.'}];
+
+      formatter = new Formatter({
+        deriveLanguages: ['eng', 'swe'],
+      });
+
+      return formatter.preFormat(baseMicroformatData)
+        .should.eventually
+        .have.deep.property('properties.lang')
+        .that.deep.equals(['en']);
     });
 
   });
