@@ -1,3 +1,11 @@
+### 0.5.1 (2015-09-07)
+
+
+#### Bug Fixes
+
+* **main:** some bugs with new type of HTML-content ([9d131e04](https://github.com/voxpelli/node-format-microformat/commit/9d131e04de3e2d25bc6cc078f6a9fc63e976068b))
+
+
 ## 0.5.0 (2015-08-28)
 
 
