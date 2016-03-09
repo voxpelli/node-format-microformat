@@ -1,3 +1,11 @@
+## 0.6.0 (2016-03-09)
+
+
+#### Features
+
+* **main:** Jekyll 3 compatibility ([8040c422](https://github.com/voxpelli/node-format-microformat/commit/8040c422c355cf576bad6b5b361ad86dc3b2cf1f))
+
+
 ### 0.5.1 (2015-09-07)
 
 
