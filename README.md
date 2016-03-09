@@ -99,7 +99,7 @@ Some `micropubDocument` properties receive special handling, the rest are includ
 The ones with special handling are:
 
 * **content** – isn't part of the front matter but is the actual HTML content of the file
-* **name** – inserted as `title` and if not specified, then a value of `null` will be used to avoid automatic generation of titles
+* **name** – inserted as `title` and if not specified, then a value of `''` will be used to avoid automatic generation of titles
 * **slug** – inserted as `slug`
 * **category** – inserted as `tags`
 * **published** – inserted as `date` and formatted as ISO-format

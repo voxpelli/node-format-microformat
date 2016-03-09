@@ -67,7 +67,7 @@ Formatter.prototype._formatFrontMatter = function (data) {
   var target = {
     layout: 'micropubpost',
     date: source.published[0].toISOString(),
-    title: null,
+    title: '',
   };
 
   var mapping = {
