@@ -147,4 +147,4 @@ The `preFormat()` also flattens the `files` object into an array of files and fo
 
 ## Used in
 
-* [webpage-micropub-to-github](https://github.com/voxpelli/webpage-micropub-to-github) – a self-hosteable Micropub endpoint that publishes posts to Jekyll sites by committing them to a GitHub repository
+* [webpage-micropub-to-github](https://github.com/voxpelli/webpage-micropub-to-github) – a self-hosteable Micropub endpoint that publishes posts to Jekyll sites by committing them to their GitHub repositories
