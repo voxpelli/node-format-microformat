@@ -1,5 +1,3 @@
-/* jshint node: true */
-
 'use strict';
 
 var _ = require('lodash');
@@ -62,19 +60,19 @@ Formatter.prototype._formatFrontMatter = function (data) {
   var source = data.properties;
   var derived = data.derived || {};
 
-  //TODO: Include the "type" property so that more than the now assumed "h-entry" can be supported
+  // TODO: Include the "type" property so that more than the now assumed "h-entry" can be supported
 
   var target = {
     layout: 'micropubpost',
     date: source.published[0].toISOString(),
-    title: '',
+    title: ''
   };
 
   var mapping = {
     name: 'title',
     slug: 'slug',
     category: 'tags',
-    lang: 'lang',
+    lang: 'lang'
   };
   var ignore = ['content', 'published', 'url'];
 
@@ -105,7 +103,8 @@ Formatter.prototype._formatContent = function (data) {
 
   content = [].concat(content);
 
-  var und = new Upndown(), self = this;
+  var und = new Upndown();
+  var self = this;
 
   if (_.isArray(content)) {
     return Promise.all(content.map(function (content) {
@@ -165,7 +164,7 @@ Formatter.prototype._preFormatFiles = function (data) {
         type,
         file,
         that.formatFilesFilename(type, file, data),
-        that.formatFilesURL(type, file, data),
+        that.formatFilesURL(type, file, data)
       ]));
     });
   });
@@ -183,7 +182,7 @@ Formatter.prototype._preFormatFiles = function (data) {
 
       newFiles.push({
         filename: filename,
-        buffer: fileData.buffer,
+        buffer: fileData.buffer
       });
     });
 
@@ -215,7 +214,7 @@ Formatter.prototype.preFormat = function (data) {
     strippedContent = getMfValue(data.properties.content).join('\n');
 
     if (strippedContent !== '') {
-      estimatedLang = franc(strippedContent, this.deriveLanguages === true ? {} : { whitelist : this.deriveLanguages });
+      estimatedLang = franc(strippedContent, this.deriveLanguages === true ? {} : { whitelist: this.deriveLanguages });
     }
 
     if (estimatedLang && estimatedLang !== 'und' && (this.deriveLanguages === true || this.deriveLanguages.indexOf(estimatedLang) !== -1)) {
@@ -283,7 +282,7 @@ Formatter.prototype.preFormat = function (data) {
 Formatter.prototype.format = function (data) {
   return Promise.all([
     this._formatFrontMatter(data),
-    this._formatContent(data),
+    this._formatContent(data)
   ]).then(function (result) {
     return result.join('');
   });
@@ -324,7 +323,7 @@ Formatter.prototype._formatFilesSlug = function (type, file) {
 Formatter.prototype.formatFilesFilename = function (type, file, data) {
   var slug = data.properties.slug[0];
   var filename = this._formatFilesSlug(type, file);
-  return Promise.resolve('media/' + strftime('%Y-%m', data.properties.published[0])  + (slug ? '-' + slug : '') + '/' + filename);
+  return Promise.resolve('media/' + strftime('%Y-%m', data.properties.published[0]) + (slug ? '-' + slug : '') + '/' + filename);
 };
 
 Formatter.prototype.formatFilesURL = function (type, file, data) {
@@ -348,16 +347,16 @@ Formatter.prototype.formatAll = function (data) {
         that.formatURL(formattedData, that.relativeTo),
         that.format(formattedData),
         formattedData.files,
-        formattedData,
+        formattedData
       ]);
     })
     .then(function (result) {
       return {
         filename: result[0],
-        url:      result[1],
-        content:  result[2],
-        files:    result[3],
-        raw:      result[4],
+        url: result[1],
+        content: result[2],
+        files: result[3],
+        raw: result[4]
       };
     });
 };

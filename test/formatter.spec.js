@@ -1,6 +1,3 @@
-/* jshint node: true */
-/* global beforeEach, afterEach, describe, it */
-
 'use strict';
 
 var chai = require('chai');
@@ -28,8 +25,8 @@ describe('Formatter', function () {
         'content': ['hello world'],
         'name': ['awesomeness is awesome'],
         'slug': ['awesomeness-is-awesome'],
-        'published': [new Date(1435674841000)],
-      },
+        'published': [new Date(1435674841000)]
+      }
     };
   });
 
@@ -38,7 +35,6 @@ describe('Formatter', function () {
   });
 
   describe('format', function () {
-
     it('should return a fully formatted page on sunny day content', function () {
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
@@ -125,7 +121,7 @@ describe('Formatter', function () {
     });
 
     it('should ignore urls', function () {
-      //TODO: We might want to eventually change this and actually expose the URL to Jekyll as the prefered permalink
+      // TODO: We might want to eventually change this and actually expose the URL to Jekyll as the prefered permalink
       //      But when doing so we should also treat the URL as a unique identifier and make sure to replace any
       //      previous file that might have that same explicit or implied URL.
       //      For now we don't have any such logic and thus we should simply just ignore this property until it can
@@ -242,7 +238,7 @@ describe('Formatter', function () {
     it('should support content.value', function () {
       baseMicroformatData.properties.content = [
         { html: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' },
-        { value: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' },
+        { value: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' }
       ];
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
@@ -260,11 +256,9 @@ describe('Formatter', function () {
         '&lt;p&gt;Abc&lt;/p&gt;&lt;p&gt;123&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Foo&lt;/li&gt;&lt;li&gt;Bar&lt;/li&gt;&lt;/ul&gt;\n'
       );
     });
-
   });
 
   describe('_formatSlug', function () {
-
     beforeEach(function () {
       delete baseMicroformatData.properties.slug;
     });
@@ -319,11 +313,9 @@ describe('Formatter', function () {
       formatter = new Formatter({ contentSlug: true });
       formatter._formatSlug(baseMicroformatData).should.equal('one-two-three-four-five');
     });
-
   });
 
   describe('formatFilename', function () {
-
     it('should use slug', function () {
       return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-30-awesomeness-is-awesome.md');
     });
@@ -332,11 +324,9 @@ describe('Formatter', function () {
       formatter = new Formatter({ noMarkdown: true });
       return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-30-awesomeness-is-awesome.html');
     });
-
   });
 
   describe('formatURL', function () {
-
     it('should base URL on slug', function () {
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015/06/awesomeness-is-awesome/');
     });
@@ -350,11 +340,9 @@ describe('Formatter', function () {
       baseMicroformatData.derived = { category: 'interaction' };
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('interaction/2015/06/awesomeness-is-awesome/');
     });
-
   });
 
   describe('preFormat', function () {
-
     it('should add published', function () {
       delete baseMicroformatData.properties.published;
       return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('properties.published[0]').that.is.an.instanceOf(Date).and.eql(new Date());
@@ -412,7 +400,7 @@ describe('Formatter', function () {
       return formatter.preFormat(baseMicroformatData).then(function (result) {
         result.should.have.deep.property('derived.personTags').that.deep.equals([
           'http://example.com/',
-          'http://example.net/',
+          'http://example.net/'
         ]);
         result.should.have.deep.property('properties.category').that.deep.equals(['foo']);
       });
@@ -430,9 +418,9 @@ describe('Formatter', function () {
       formatter = new Formatter({
         defaults: {
           properties: {
-            lang: ['en'],
+            lang: ['en']
           }
-        },
+        }
       });
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
@@ -444,9 +432,9 @@ describe('Formatter', function () {
       formatter = new Formatter({
         defaults: {
           properties: {
-            content: ['some default content'],
+            content: ['some default content']
           }
-        },
+        }
       });
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
@@ -469,7 +457,7 @@ describe('Formatter', function () {
       baseMicroformatData.properties.content = ['Another evening at the cottage and Bob was feeling brave. Make some food by himself? Surely, how hard could it be. But as the night went on and the dinner cooked Bob grew ever more desperate. Pepper, salt – all these crazy names of things he had never heard before. It would be a long night for poor Mr Bob.'];
 
       formatter = new Formatter({
-        deriveLanguages: ['eng', 'swe'],
+        deriveLanguages: ['eng', 'swe']
       });
 
       return formatter.preFormat(baseMicroformatData)
@@ -482,7 +470,7 @@ describe('Formatter', function () {
       baseMicroformatData.properties.content = ['Det var en gång en liten utter som hette Skog. Något ironiskt så för skog var allt annat än det som fanns kvar efter att Skog haft sin framfart i sitt grannskap. Varenda liten plätt var kal som åker. Men Skog var inte ledsen för det. Han hade ju trots allt sig själv.'];
 
       formatter = new Formatter({
-        deriveLanguages: ['eng', 'swe'],
+        deriveLanguages: ['eng', 'swe']
       });
 
       return formatter.preFormat(baseMicroformatData)
@@ -502,7 +490,7 @@ describe('Formatter', function () {
       baseMicroformatData.properties.content = ['Du hast mich einen käse mit orangen saft gekaufen.'];
 
       formatter = new Formatter({
-        deriveLanguages: true,
+        deriveLanguages: true
       });
 
       return formatter.preFormat(baseMicroformatData)
@@ -515,7 +503,7 @@ describe('Formatter', function () {
       baseMicroformatData.properties.content = ['Nope'];
 
       formatter = new Formatter({
-        deriveLanguages: true,
+        deriveLanguages: true
       });
 
       return formatter.preFormat(baseMicroformatData)
@@ -528,7 +516,7 @@ describe('Formatter', function () {
       baseMicroformatData.properties.lang = ['eng'];
 
       formatter = new Formatter({
-        deriveLanguages: ['eng', 'swe'],
+        deriveLanguages: ['eng', 'swe']
       });
 
       return formatter.preFormat(baseMicroformatData)
@@ -549,7 +537,7 @@ describe('Formatter', function () {
       baseMicroformatData.properties.content = [{html: 'Another evening at the cottage and Bob was feeling brave. Make some food by himself? Surely, how hard could it be. But as the night went on and the dinner cooked Bob grew ever more desperate. Pepper, salt – all these crazy names of things he had never heard before. It would be a long night for poor Mr Bob.'}];
 
       formatter = new Formatter({
-        deriveLanguages: ['eng', 'swe'],
+        deriveLanguages: ['eng', 'swe']
       });
 
       return formatter.preFormat(baseMicroformatData)
@@ -557,11 +545,9 @@ describe('Formatter', function () {
         .have.deep.property('properties.lang')
         .that.deep.equals(['en']);
     });
-
   });
 
   describe('_formatFilesSlug', function () {
-
     it('should handle a regular filename', function () {
       formatter._formatFilesSlug('photo', { filename: 'example.jpg' }).should.equal('example.jpg');
     });
@@ -569,18 +555,16 @@ describe('Formatter', function () {
     it('should handle a complex filename', function () {
       formatter._formatFilesSlug('photo', { filename: '123.ExampleIs Very-Cool.jpg' }).should.equal('123.example-is-very-cool.jpg');
     });
-
   });
 
   describe('_preFormatFiles', function () {
-
     it('should format files correctly', function () {
       var bufferFoo = new Buffer('sampledata');
 
       baseMicroformatData.files = {
         photo: [
           { filename: 'foo.jpg', buffer: bufferFoo },
-          { filename: 'bar.png', buffer: new Buffer('sampledata') },
+          { filename: 'bar.png', buffer: new Buffer('sampledata') }
         ]
       };
 
@@ -592,12 +576,12 @@ describe('Formatter', function () {
         .that.deep.equals([
           {
             filename: 'media/2015-06-awesomeness-is-awesome/foo.jpg',
-            buffer: new Buffer('sampledata'),
+            buffer: new Buffer('sampledata')
           },
           {
             filename: 'media/2015-06-awesomeness-is-awesome/bar.png',
-            buffer: new Buffer('sampledata'),
-          },
+            buffer: new Buffer('sampledata')
+          }
         ])
         .and.has.deep.property('[0].buffer', bufferFoo);
     });
@@ -606,7 +590,7 @@ describe('Formatter', function () {
       baseMicroformatData.files = {
         photo: [{ filename: 'foo.jpg', buffer: new Buffer('sampledata') }],
         video: [{ filename: 'foo.mp4', buffer: new Buffer('sampledata') }],
-        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }],
+        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }]
       };
 
       return formatter._preFormatFiles(baseMicroformatData)
@@ -621,7 +605,7 @@ describe('Formatter', function () {
       formatter = new Formatter('http://example.com/bar/');
 
       baseMicroformatData.files = {
-        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }],
+        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }]
       };
 
       return formatter._preFormatFiles(baseMicroformatData)
@@ -633,7 +617,7 @@ describe('Formatter', function () {
     it('should honor any pre-existing URL:s', function () {
       baseMicroformatData.properties.audio = ['http://example.com/pre-existing/url'];
       baseMicroformatData.files = {
-        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }],
+        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }]
       };
 
       return formatter._preFormatFiles(baseMicroformatData)
@@ -641,14 +625,12 @@ describe('Formatter', function () {
         .have.deep.property('properties.audio')
         .that.deep.equals([
           'http://example.com/pre-existing/url',
-          'media/2015-06-awesomeness-is-awesome/foo.mp3',
+          'media/2015-06-awesomeness-is-awesome/foo.mp3'
         ]);
     });
-
   });
 
   describe('formatAll', function () {
-
     it('should format everything correctly', function () {
       var photoBuffer = new Buffer('sampledata');
 
@@ -656,7 +638,7 @@ describe('Formatter', function () {
         photo: [
           {
             filename: 'bar.png',
-            buffer: photoBuffer,
+            buffer: photoBuffer
           }
         ]
       };
@@ -680,13 +662,13 @@ describe('Formatter', function () {
             'hello world\n',
           files: [{
             filename: 'media/2015-06-awesomeness-is-awesome/bar.png',
-            buffer: photoBuffer,
+            buffer: photoBuffer
           }],
           raw: {
             derived: {},
             files: [{
               filename: 'media/2015-06-awesomeness-is-awesome/bar.png',
-              buffer: photoBuffer,
+              buffer: photoBuffer
             }],
             preFormatted: true,
             properties: {
@@ -694,14 +676,12 @@ describe('Formatter', function () {
               name: ['awesomeness is awesome'],
               photo: ['http://example.com/bar/media/2015-06-awesomeness-is-awesome/bar.png'],
               published: [new Date(1435674841000)],
-              slug: ['awesomeness-is-awesome'],
+              slug: ['awesomeness-is-awesome']
             },
-            type: ['h-entry'],
+            type: ['h-entry']
           }
 
         });
     });
-
   });
-
 });
