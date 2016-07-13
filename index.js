@@ -25,7 +25,7 @@ var getMfValue = function (data) {
           .replace(whitespaceRegexp, ' ')
           .trim();
       }
-      if (_.isString(item)) { return item; }
+      if (typeof item === 'string') { return item; }
     })
     .filter()
     .value();
@@ -46,7 +46,7 @@ var Formatter = function (options) {
   if (typeof options === 'string') {
     options = { relativeTo: options };
   } else {
-    options = _.extend({}, options || {});
+    options = Object.assign({}, options || {});
   }
 
   this.relativeTo = options.relativeTo;
@@ -106,9 +106,9 @@ Formatter.prototype._formatContent = function (data) {
   var und = new Upndown();
   var self = this;
 
-  if (_.isArray(content)) {
+  if (Array.isArray(content)) {
     return Promise.all(content.map(function (content) {
-      if (!_.isObject(content)) {
+      if (typeof content !== 'object') {
         content = { value: content };
       }
 
@@ -122,7 +122,7 @@ Formatter.prototype._formatContent = function (data) {
 
       return _.escape(content.value || '');
     })).then(function (result) {
-      return _.filter(result).join('\n') + '\n';
+      return result.filter(value => !!value).join('\n') + '\n';
     });
   }
 };
@@ -171,7 +171,8 @@ Formatter.prototype._preFormatFiles = function (data) {
 
   return Promise.all(fileResolves).then(function (files) {
     var newFiles = [];
-    _.each(files, function (file) {
+
+    files.forEach(file => {
       var type = file[0];
       var fileData = file[1];
       var filename = file[2];
@@ -198,11 +199,7 @@ Formatter.prototype.preFormat = function (data) {
   }
   data.preFormatted = true;
 
-  data = _.cloneDeep(data, function (value) {
-    if (value instanceof Buffer) {
-      return value;
-    }
-  });
+  data = _.cloneDeepWith(data, value => value instanceof Buffer ? value : undefined);
 
   data.properties.published = [data.properties.published && data.properties.published[0] ? new Date(data.properties.published[0]) : new Date()];
 
@@ -222,8 +219,8 @@ Formatter.prototype.preFormat = function (data) {
     }
   }
 
-  if (_.isArray(data.properties.lang)) {
-    data.properties.lang = _.map(data.properties.lang, function (lang) {
+  if (Array.isArray(data.properties.lang)) {
+    data.properties.lang = data.properties.lang.map(lang => {
       if (!lang || lang.length !== 3) { return lang; }
 
       var code = iso6393.get(lang);
@@ -241,7 +238,7 @@ Formatter.prototype.preFormat = function (data) {
   if (!_.isEmpty(data.properties.category)) {
     data.derived.personTags = [];
 
-    data.properties.category = _.filter(data.properties.category, function (tag) {
+    data.properties.category = data.properties.category.filter(tag => {
       if (httpRegexp.test(tag)) {
         data.derived.personTags.push(tag);
         return false;
@@ -317,7 +314,7 @@ Formatter.prototype.formatURL = function (data) {
 };
 
 Formatter.prototype._formatFilesSlug = function (type, file) {
-  return _.map(file.filename.trim().split('.'), semiKebabCase).join('.');
+  return file.filename.trim().split('.').map(name => semiKebabCase(name)).join('.');
 };
 
 Formatter.prototype.formatFilesFilename = function (type, file, data) {
