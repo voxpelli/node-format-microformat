@@ -144,3 +144,7 @@ The `preFormat()` also flattens the `files` object into an array of files and fo
 
 * [micropub-express](https://github.com/voxpelli/node-micropub-express) – an Express 4 Micropub endpoint that accepts and verifies Micropub requests and calls a callback with a parsed `micropubDocument` that can be used with this module
 * [github-publish](https://github.com/voxpelli/node-github-publish) – a module that takes a filename and content and publishes that to a GitHub repository. A useful place to send the formatted data that comes out of this module if one wants to add it to a GitHub hosted Jekyll blog of some kind, like eg. [GitHub Pages](https://pages.github.com/).
+
+## Used in
+
+* [webpage-micropub-to-github](https://github.com/voxpelli/webpage-micropub-to-github) – a self-hosteable Micropub endpoint that publishes posts to Jekyll sites by committing them to a GitHub repository
