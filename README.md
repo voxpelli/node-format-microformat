@@ -70,6 +70,7 @@ formatter.preFormat(micropubDocument)
 * **contentSlug** – if set to `true`, then the slug creation will use the `properties.content` data as a fallback to `properties.name` prior to basing the slug on the timestamp.
 * **defaults** – a `micropubDocument` with defaults that will be added as part of the `preFormat()`. Useful to eg. ensure that all documents have a language explicitly set.
 * **deriveLanguages** – an array defining what languages, using [ISO 639-3](https://en.wikipedia.org/wiki/ISO_639-3), to autodetect – or `true` to try and autodetect everything
+* **permalinkStyle** – a Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/). Defaults to Jekyll's default: `date`
 
 ## Methods
 

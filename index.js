@@ -8,6 +8,7 @@ const ent = require('ent');
 const Upndown = require('upndown');
 const franc = require('franc');
 const iso6393 = require('iso-639-3');
+const jekyllUtils = require('jekyll-utils');
 
 const htmlRegexp = /<[^>]+>/g;
 const camelRegexp = /([a-z])([A-Z])/g;
@@ -54,9 +55,10 @@ const Formatter = function (options) {
   this.contentSlug = !!options.contentSlug;
   this.defaults = options.defaults;
   this.deriveLanguages = options.deriveLanguages || false;
+  this.permalinkStyle = options.permalinkStyle;
 };
 
-Formatter.prototype._formatFrontMatter = function (data) {
+Formatter.prototype._resolveFrontMatterData = function (data) {
   const source = data.properties;
   const derived = data.derived || {};
 
@@ -93,10 +95,17 @@ Formatter.prototype._formatFrontMatter = function (data) {
     target.persontags = derived.personTags;
   }
 
-  return '---\n' + yaml.safeDump(target) + '---\n';
+  return target;
+};
+
+Formatter.prototype._formatFrontMatter = function (data) {
+  const frontMatterData = data.frontMatterData || this._resolveFrontMatterData(data);
+  return '---\n' + yaml.safeDump(frontMatterData) + '---\n';
 };
 
 Formatter.prototype._formatContent = function (data) {
+  data = data.formattedData || data;
+
   let content = data.properties.content;
 
   if (!content) { return Promise.resolve(''); }
@@ -273,6 +282,18 @@ Formatter.prototype.preFormat = function (data) {
   return result;
 };
 
+Formatter.prototype._precalculate = function (formattedData) {
+  return Promise.all([
+    this.formatFilename(formattedData),
+    this._resolveFrontMatterData(formattedData)
+  ])
+    .then(result => ({
+      formattedData,
+      filename: result[0],
+      frontMatterData: result[1]
+    }));
+};
+
 Formatter.prototype.format = function (data) {
   return Promise.all([
     this._formatFrontMatter(data),
@@ -293,21 +314,29 @@ Formatter.prototype.formatFilename = function (data) {
   );
 };
 
+Formatter.prototype._getJekyllResource = function (data) {
+  return Promise.resolve(data.formattedData ? data : this._precalculate(data))
+    .then(data => ({
+      basename_without_ext: data.filename, // TODO: Complete
+      date: data.formattedData.properties.published[0],
+      data: {
+        categories: data.frontMatterData.category ? [].concat(data.frontMatterData.category) : [],
+        slug: data.frontMatterData.slug
+      }
+    }));
+};
+
 Formatter.prototype.formatURL = function (data) {
-  const derived = data.derived || {};
+  return this._getJekyllResource(data)
+    .then(jekyllResource => {
+      let url = jekyllUtils.generateUrl(this.permalinkStyle, jekyllResource).replace(/^\/+/, '');
 
-  const slug = data.properties.slug[0];
-  let url = strftime('%Y/%m', data.properties.published[0]) + '/' + (slug ? slug + '/' : '');
+      if (this.relativeTo) {
+        url = urlModule.resolve(this.relativeTo, url);
+      }
 
-  if (derived.category) {
-    url = derived.category + '/' + url;
-  }
-
-  if (this.relativeTo) {
-    url = urlModule.resolve(this.relativeTo, url);
-  }
-
-  return Promise.resolve(url);
+      return url;
+    });
 };
 
 Formatter.prototype._formatFilesSlug = function (type, file) {
@@ -327,12 +356,13 @@ Formatter.prototype.formatFilesURL = function (type, file, data) {
 
 Formatter.prototype.formatAll = function (data) {
   return this.preFormat(data)
-    .then(formattedData => Promise.all([
-      this.formatFilename(formattedData),
-      this.formatURL(formattedData, this.relativeTo),
-      this.format(formattedData),
-      formattedData.files,
-      formattedData
+    .then(formattedData => this._precalculate(formattedData))
+    .then(result => Promise.all([
+      result.filename,
+      this.formatURL(result, this.relativeTo),
+      this.format(result),
+      result.formattedData.files,
+      result.formattedData
     ]))
     .then(result => ({
       filename: result[0],
