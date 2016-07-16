@@ -1,3 +1,19 @@
+## 0.7.0 (2016-07-16)
+
+
+#### Features
+
+* **main:** made permalink style configurable ([2c987995](https://github.com/voxpelli/node-format-microformat/commit/2c98799531cb860b71423f583c8518a38a9f97e7))
+
+
+#### Breaking Changes
+
+* now uses Jekyll's default permalink style instead of "/:categories/:year/:month/:title/" as previously
+ ([2c987995](https://github.com/voxpelli/node-format-microformat/commit/2c98799531cb860b71423f583c8518a38a9f97e7))
+* New minimum Node.js version: 5.x
+ ([1e1c50b4](https://github.com/voxpelli/node-format-microformat/commit/1e1c50b45156645a9888497a9b9d3a521dc7b8c2))
+
+
 ## 0.6.0 (2016-03-09)
 
 
