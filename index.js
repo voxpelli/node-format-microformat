@@ -1,21 +1,21 @@
 'use strict';
 
-var _ = require('lodash');
-var urlModule = require('url');
-var yaml = require('js-yaml');
-var strftime = require('strftime');
-var ent = require('ent');
-var Upndown = require('upndown');
-var franc = require('franc');
-var iso6393 = require('iso-639-3');
+const _ = require('lodash');
+const urlModule = require('url');
+const yaml = require('js-yaml');
+const strftime = require('strftime');
+const ent = require('ent');
+const Upndown = require('upndown');
+const franc = require('franc');
+const iso6393 = require('iso-639-3');
 
-var htmlRegexp = /<[^>]+>/g;
-var camelRegexp = /([a-z])([A-Z])/g;
-var kebabRegexp = /[^a-z0-9]+/g;
-var whitespaceRegexp = /\s+/g;
-var httpRegexp = /^http(s?):\/\//;
+const htmlRegexp = /<[^>]+>/g;
+const camelRegexp = /([a-z])([A-Z])/g;
+const kebabRegexp = /[^a-z0-9]+/g;
+const whitespaceRegexp = /\s+/g;
+const httpRegexp = /^http(s?):\/\//;
 
-var getMfValue = function (data) {
+const getMfValue = function (data) {
   return _(data || [])
     .map(function (item) {
       if (!item) { return; }
@@ -31,7 +31,7 @@ var getMfValue = function (data) {
     .value();
 };
 
-var semiKebabCase = function (name) {
+const semiKebabCase = function (name) {
   // Convert camel case to spaces, then ensure everything is lower case and then finally – make kebab
   return _.deburr(name)
     .replace(camelRegexp, '$1 $2')
@@ -42,7 +42,7 @@ var semiKebabCase = function (name) {
     .replace(whitespaceRegexp, '-');
 };
 
-var Formatter = function (options) {
+const Formatter = function (options) {
   if (typeof options === 'string') {
     options = { relativeTo: options };
   } else {
