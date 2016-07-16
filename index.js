@@ -121,9 +121,8 @@ Formatter.prototype._formatContent = function (data) {
       }
 
       return _.escape(content.value || '');
-    })).then(function (result) {
-      return result.filter(value => !!value).join('\n') + '\n';
-    });
+    }))
+      .then(result => result.filter(value => !!value).join('\n') + '\n');
   }
 };
 
@@ -155,21 +154,20 @@ Formatter.prototype._formatSlug = function (data) {
 };
 
 Formatter.prototype._preFormatFiles = function (data) {
-  var that = this;
   var fileResolves = [];
 
-  ['video', 'photo', 'audio'].forEach(function (type) {
-    (data.files[type] || []).forEach(function (file) {
+  ['video', 'photo', 'audio'].forEach(type => {
+    (data.files[type] || []).forEach(file => {
       fileResolves.push(Promise.all([
         type,
         file,
-        that.formatFilesFilename(type, file, data),
-        that.formatFilesURL(type, file, data)
+        this.formatFilesFilename(type, file, data),
+        this.formatFilesURL(type, file, data)
       ]));
     });
   });
 
-  return Promise.all(fileResolves).then(function (files) {
+  return Promise.all(fileResolves).then(files => {
     var newFiles = [];
 
     files.forEach(file => {
@@ -324,38 +322,26 @@ Formatter.prototype.formatFilesFilename = function (type, file, data) {
 };
 
 Formatter.prototype.formatFilesURL = function (type, file, data) {
-  var that = this;
-
-  return this.formatFilesFilename(type, file, data).then(function (url) {
-    if (that.relativeTo) {
-      url = urlModule.resolve(that.relativeTo, url);
-    }
-    return url;
-  });
+  return this.formatFilesFilename(type, file, data)
+    .then(url => this.relativeTo ? urlModule.resolve(this.relativeTo, url) : url);
 };
 
 Formatter.prototype.formatAll = function (data) {
-  var that = this;
-
   return this.preFormat(data)
-    .then(function (formattedData) {
-      return Promise.all([
-        that.formatFilename(formattedData),
-        that.formatURL(formattedData, that.relativeTo),
-        that.format(formattedData),
-        formattedData.files,
-        formattedData
-      ]);
-    })
-    .then(function (result) {
-      return {
-        filename: result[0],
-        url: result[1],
-        content: result[2],
-        files: result[3],
-        raw: result[4]
-      };
-    });
+    .then(formattedData => Promise.all([
+      this.formatFilename(formattedData),
+      this.formatURL(formattedData, this.relativeTo),
+      this.format(formattedData),
+      formattedData.files,
+      formattedData
+    ]))
+    .then(result => ({
+      filename: result[0],
+      url: result[1],
+      content: result[2],
+      files: result[3],
+      raw: result[4]
+    }));
 };
 
 module.exports = Formatter;
