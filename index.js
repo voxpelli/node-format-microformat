@@ -57,24 +57,24 @@ const Formatter = function (options) {
 };
 
 Formatter.prototype._formatFrontMatter = function (data) {
-  var source = data.properties;
-  var derived = data.derived || {};
+  const source = data.properties;
+  const derived = data.derived || {};
 
   // TODO: Include the "type" property so that more than the now assumed "h-entry" can be supported
 
-  var target = {
+  const target = {
     layout: 'micropubpost',
     date: source.published[0].toISOString(),
     title: ''
   };
 
-  var mapping = {
+  const mapping = {
     name: 'title',
     slug: 'slug',
     category: 'tags',
     lang: 'lang'
   };
-  var ignore = ['content', 'published', 'url'];
+  const ignore = ['content', 'published', 'url'];
 
   _.forEach(source, function (value, key) {
     if (!value.length || ignore.indexOf(key) !== -1) { return; }
@@ -97,23 +97,22 @@ Formatter.prototype._formatFrontMatter = function (data) {
 };
 
 Formatter.prototype._formatContent = function (data) {
-  var content = data.properties.content;
+  let content = data.properties.content;
 
   if (!content) { return Promise.resolve(''); }
 
   content = [].concat(content);
 
-  var und = new Upndown();
-  var self = this;
+  const und = new Upndown();
 
   if (Array.isArray(content)) {
-    return Promise.all(content.map(function (content) {
+    return Promise.all(content.map(content => {
       if (typeof content !== 'object') {
         content = { value: content };
       }
 
       if (content.html) {
-        return self.markdown ? new Promise(function (resolve) {
+        return this.markdown ? new Promise(function (resolve) {
           und.convert(content.html, function (err, markdown) {
             resolve(err ? content.html : markdown);
           });
@@ -131,7 +130,7 @@ Formatter.prototype._formatSlug = function (data) {
     return semiKebabCase(data.properties.slug[0]);
   }
 
-  var name;
+  let name;
 
   if (data.properties.name) {
     name = data.properties.name[0].trim();
@@ -154,7 +153,7 @@ Formatter.prototype._formatSlug = function (data) {
 };
 
 Formatter.prototype._preFormatFiles = function (data) {
-  var fileResolves = [];
+  const fileResolves = [];
 
   ['video', 'photo', 'audio'].forEach(type => {
     (data.files[type] || []).forEach(file => {
@@ -168,13 +167,13 @@ Formatter.prototype._preFormatFiles = function (data) {
   });
 
   return Promise.all(fileResolves).then(files => {
-    var newFiles = [];
+    const newFiles = [];
 
     files.forEach(file => {
-      var type = file[0];
-      var fileData = file[1];
-      var filename = file[2];
-      var url = file[3];
+      const type = file[0];
+      const fileData = file[1];
+      const filename = file[2];
+      const url = file[3];
 
       data.properties[type] = data.properties[type] || [];
       data.properties[type].push(url);
@@ -201,10 +200,10 @@ Formatter.prototype.preFormat = function (data) {
 
   data.properties.published = [data.properties.published && data.properties.published[0] ? new Date(data.properties.published[0]) : new Date()];
 
-  var slug = this._formatSlug(data);
+  const slug = this._formatSlug(data);
   data.properties.slug = slug ? [slug] : [];
 
-  var strippedContent, estimatedLang;
+  let strippedContent, estimatedLang;
   if (_.isEmpty(data.properties.lang) && this.deriveLanguages && !_.isEmpty(data.properties.content)) {
     strippedContent = getMfValue(data.properties.content).join('\n');
 
@@ -221,7 +220,7 @@ Formatter.prototype.preFormat = function (data) {
     data.properties.lang = data.properties.lang.map(lang => {
       if (!lang || lang.length !== 3) { return lang; }
 
-      var code = iso6393.get(lang);
+      const code = iso6393.get(lang);
 
       if (code) {
         return code.iso6391;
@@ -265,7 +264,7 @@ Formatter.prototype.preFormat = function (data) {
 
   _.defaultsDeep(data, this.defaults || {});
 
-  var result = Promise.resolve(data);
+  let result = Promise.resolve(data);
 
   if (!_.isEmpty(data.files)) {
     result = result.then(this._preFormatFiles.bind(this));
@@ -284,7 +283,7 @@ Formatter.prototype.format = function (data) {
 };
 
 Formatter.prototype.formatFilename = function (data) {
-  var slug = data.properties.slug[0];
+  const slug = data.properties.slug[0];
 
   return Promise.resolve(
     '_posts/' +
@@ -295,10 +294,10 @@ Formatter.prototype.formatFilename = function (data) {
 };
 
 Formatter.prototype.formatURL = function (data) {
-  var derived = data.derived || {};
+  const derived = data.derived || {};
 
-  var slug = data.properties.slug[0];
-  var url = strftime('%Y/%m', data.properties.published[0]) + '/' + (slug ? slug + '/' : '');
+  const slug = data.properties.slug[0];
+  let url = strftime('%Y/%m', data.properties.published[0]) + '/' + (slug ? slug + '/' : '');
 
   if (derived.category) {
     url = derived.category + '/' + url;
@@ -316,8 +315,8 @@ Formatter.prototype._formatFilesSlug = function (type, file) {
 };
 
 Formatter.prototype.formatFilesFilename = function (type, file, data) {
-  var slug = data.properties.slug[0];
-  var filename = this._formatFilesSlug(type, file);
+  const slug = data.properties.slug[0];
+  const filename = this._formatFilesSlug(type, file);
   return Promise.resolve('media/' + strftime('%Y-%m', data.properties.published[0]) + (slug ? '-' + slug : '') + '/' + filename);
 };
 

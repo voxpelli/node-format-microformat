@@ -1,6 +1,6 @@
 'use strict';
 
-var lintlovin = require('lintlovin');
+const lintlovin = require('lintlovin');
 
 module.exports = function (grunt) {
   lintlovin.initConfig(grunt, {}, {

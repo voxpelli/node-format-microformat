@@ -1,8 +1,8 @@
 'use strict';
 
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-var sinon = require('sinon');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const sinon = require('sinon');
 
 chai.use(chaiAsPromised);
 
@@ -10,10 +10,10 @@ chai.use(chaiAsPromised);
 chai.should();
 
 describe('Formatter', function () {
-  var Formatter = require('../');
-  var formatter;
-  var baseMicroformatData;
-  var clock;
+  const Formatter = require('../');
+  let formatter;
+  let baseMicroformatData;
+  let clock;
 
   beforeEach(function () {
     clock = sinon.useFakeTimers(1435674000000);
@@ -559,7 +559,7 @@ describe('Formatter', function () {
 
   describe('_preFormatFiles', function () {
     it('should format files correctly', function () {
-      var bufferFoo = new Buffer('sampledata');
+      const bufferFoo = new Buffer('sampledata');
 
       baseMicroformatData.files = {
         photo: [
@@ -632,7 +632,7 @@ describe('Formatter', function () {
 
   describe('formatAll', function () {
     it('should format everything correctly', function () {
-      var photoBuffer = new Buffer('sampledata');
+      const photoBuffer = new Buffer('sampledata');
 
       baseMicroformatData.files = {
         photo: [
