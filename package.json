@@ -11,7 +11,6 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node .",
     "test": "installed-check -e && node -e \"require('grunt').tasks(['test']);\"",
     "test-all": "installed-check -e && node -e \"require('grunt').tasks(['test-all']);\"",
     "prepush": "npm test"
