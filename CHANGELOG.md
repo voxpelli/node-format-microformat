@@ -1,3 +1,11 @@
+## 0.8.0 (2016-08-17)
+
+
+#### Features
+
+* **main:** enable custom derived category ([15e832b4](https://github.com/voxpelli/node-format-microformat/commit/15e832b4dfa90886d3c8a08707b9cac65268bbd8))
+
+
 ## 0.7.0 (2016-07-16)
 
 
