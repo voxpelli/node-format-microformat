@@ -69,6 +69,7 @@ formatter.preFormat(micropubDocument)
 * **noMarkdown** – if set to `true` then no conversion to Markdown will happen for the content.
 * **contentSlug** – if set to `true`, then the slug creation will use the `properties.content` data as a fallback to `properties.name` prior to basing the slug on the timestamp.
 * **defaults** – a `micropubDocument` with defaults that will be added as part of the `preFormat()`. Useful to eg. ensure that all documents have a language explicitly set.
+* **deriveCategory** – a method that's provided the properties of the post and which returns a dervice category – or `false` to disable default category deriving
 * **deriveLanguages** – an array defining what languages, using [ISO 639-3](https://en.wikipedia.org/wiki/ISO_639-3), to autodetect – or `true` to try and autodetect everything
 * **permalinkStyle** – a Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/). Defaults to Jekyll's default: `date`
 

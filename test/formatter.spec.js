@@ -402,6 +402,17 @@ describe('Formatter', function () {
       return formatter.preFormat(baseMicroformatData).should.eventually.not.have.deep.property('derived.category');
     });
 
+    it('should not derive interaction category when opted out of', function () {
+      formatter = new Formatter({ deriveCategory: false });
+      baseMicroformatData.properties['in-reply-to'] = ['http://example.com/replied/to/page'];
+      return formatter.preFormat(baseMicroformatData).should.eventually.not.have.deep.property('derived.category');
+    });
+
+    it('should use result of deriveCategory() method when provided', function () {
+      formatter = new Formatter({ deriveCategory: () => 'foo' });
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'foo');
+    });
+
     it('should extract person tags from regular tags', function () {
       baseMicroformatData.properties.category = ['http://example.com/', 'foo', 'http://example.net/'];
       return formatter.preFormat(baseMicroformatData).then(function (result) {

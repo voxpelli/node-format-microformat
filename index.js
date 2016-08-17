@@ -56,6 +56,7 @@ const Formatter = function (options) {
   this.defaults = options.defaults;
   this.deriveLanguages = options.deriveLanguages || false;
   this.permalinkStyle = options.permalinkStyle;
+  this.deriveCategory = options.deriveCategory === undefined ? true : options.deriveCategory;
 };
 
 Formatter.prototype._resolveFrontMatterData = function (data) {
@@ -257,7 +258,14 @@ Formatter.prototype.preFormat = function (data) {
     }
   }
 
-  if (
+  if (typeof this.deriveCategory === 'function') {
+    data.derived.category = this.deriveCategory(data.properties);
+    if (!data.derived.category) {
+      delete data.derived.category;
+    }
+  } else if (!this.deriveCategory) {
+    // Do nothing
+  } else if (
     !_.isEmpty(data.properties.bookmark) ||
     !_.isEmpty(data.properties['repost-of']) ||
     !_.isEmpty(data.properties['bookmark-of'])
