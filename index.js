@@ -1,7 +1,7 @@
 'use strict';
 
-const _ = require('lodash');
 const urlModule = require('url');
+const escapeHtml = require('escape-html');
 const yaml = require('js-yaml');
 const strftime = require('strftime');
 const ent = require('ent');
@@ -10,14 +10,25 @@ const franc = require('franc');
 const iso6393 = require('iso-639-3');
 const jekyllUtils = require('jekyll-utils');
 
+const deburr = require('lodash.deburr');
+const defaultsDeep = require('lodash.defaultsdeep');
+const cloneDeepWith = require('lodash.clonedeepwith');
+
 const htmlRegexp = /<[^>]+>/g;
 const camelRegexp = /([a-z])([A-Z])/g;
 const kebabRegexp = /[^a-z0-9]+/g;
 const whitespaceRegexp = /\s+/g;
 const httpRegexp = /^http(s?):\/\//;
 
+const isEmpty = function (value) {
+  if (!value) { return true; }
+  if (Array.isArray(value) && value.length === 0) { return true; }
+  if (typeof value === 'object' && Object.keys(value).length === 0) { return true; }
+  return false;
+};
+
 const getMfValue = function (data) {
-  return _(data || [])
+  return (data || [])
     .map(item => {
       if (!item) { return; }
       if (item.value) { return item.value; }
@@ -28,13 +39,12 @@ const getMfValue = function (data) {
       }
       if (typeof item === 'string') { return item; }
     })
-    .filter()
-    .value();
+    .filter(item => !!item);
 };
 
 const semiKebabCase = function (name) {
   // Convert camel case to spaces, then ensure everything is lower case and then finally – make kebab
-  return _.deburr(name)
+  return deburr(name)
     .replace(camelRegexp, '$1 $2')
     .trim()
     .toLowerCase()
@@ -79,7 +89,9 @@ Formatter.prototype._resolveFrontMatterData = function (data) {
   };
   const ignore = ['content', 'published', 'url'];
 
-  _.forEach(source, function (value, key) {
+  Object.keys(source).forEach(key => {
+    const value = source[key];
+
     if (!value.length || ignore.indexOf(key) !== -1) { return; }
 
     if (mapping[key]) {
@@ -129,7 +141,7 @@ Formatter.prototype._formatContent = function (data) {
         }) : content.html;
       }
 
-      return _.escape(content.value || '');
+      return escapeHtml(content.value || '');
     }))
       .then(result => result.filter(value => !!value).join('\n') + '\n');
   }
@@ -145,7 +157,7 @@ Formatter.prototype._formatSlug = function (data) {
   if (data.properties.name) {
     name = data.properties.name[0].trim();
   }
-  if (!name && !_.isEmpty(data.properties.content) && this.contentSlug) {
+  if (!name && !isEmpty(data.properties.content) && this.contentSlug) {
     name = getMfValue(data.properties.content).join('\n');
   }
 
@@ -206,7 +218,7 @@ Formatter.prototype.preFormat = function (data) {
   }
   data.preFormatted = true;
 
-  data = _.cloneDeepWith(data, value => value instanceof Buffer ? value : undefined);
+  data = cloneDeepWith(data, value => value instanceof Buffer ? value : undefined);
 
   data.properties.published = [data.properties.published && data.properties.published[0] ? new Date(data.properties.published[0]) : new Date()];
 
@@ -214,7 +226,7 @@ Formatter.prototype.preFormat = function (data) {
   data.properties.slug = slug ? [slug] : [];
 
   let strippedContent, estimatedLang;
-  if (_.isEmpty(data.properties.lang) && this.deriveLanguages && !_.isEmpty(data.properties.content)) {
+  if (isEmpty(data.properties.lang) && this.deriveLanguages && !isEmpty(data.properties.content)) {
     strippedContent = getMfValue(data.properties.content).join('\n');
 
     if (strippedContent !== '') {
@@ -242,7 +254,7 @@ Formatter.prototype.preFormat = function (data) {
 
   data.derived = {};
 
-  if (!_.isEmpty(data.properties.category)) {
+  if (!isEmpty(data.properties.category)) {
     data.derived.personTags = [];
 
     data.properties.category = data.properties.category.filter(tag => {
@@ -253,7 +265,7 @@ Formatter.prototype.preFormat = function (data) {
       return true;
     });
 
-    if (_.isEmpty(data.derived.personTags)) {
+    if (isEmpty(data.derived.personTags)) {
       delete data.derived.personTags;
     }
   }
@@ -266,24 +278,24 @@ Formatter.prototype.preFormat = function (data) {
   } else if (!this.deriveCategory) {
     // Do nothing
   } else if (
-    !_.isEmpty(data.properties.bookmark) ||
-    !_.isEmpty(data.properties['repost-of']) ||
-    !_.isEmpty(data.properties['bookmark-of'])
+    !isEmpty(data.properties.bookmark) ||
+    !isEmpty(data.properties['repost-of']) ||
+    !isEmpty(data.properties['bookmark-of'])
   ) {
     data.derived.category = 'links';
   } else if (
-    _.isEmpty(data.properties.name) || // This means it's not an "article", but a "note"
-    !_.isEmpty(data.properties['in-reply-to']) ||
-    !_.isEmpty(data.properties['like-of'])
+    isEmpty(data.properties.name) || // This means it's not an "article", but a "note"
+    !isEmpty(data.properties['in-reply-to']) ||
+    !isEmpty(data.properties['like-of'])
   ) {
     data.derived.category = 'social';
   }
 
-  _.defaultsDeep(data, this.defaults || {});
+  defaultsDeep(data, this.defaults || {});
 
   let result = Promise.resolve(data);
 
-  if (!_.isEmpty(data.files)) {
+  if (!isEmpty(data.files)) {
     result = result.then(this._preFormatFiles.bind(this));
   }
 
