@@ -18,7 +18,7 @@ const httpRegexp = /^http(s?):\/\//;
 
 const getMfValue = function (data) {
   return _(data || [])
-    .map(function (item) {
+    .map(item => {
       if (!item) { return; }
       if (item.value) { return item.value; }
       if (item.html) {
@@ -122,8 +122,8 @@ Formatter.prototype._formatContent = function (data) {
       }
 
       if (content.html) {
-        return this.markdown ? new Promise(function (resolve) {
-          und.convert(content.html, function (err, markdown) {
+        return this.markdown ? new Promise(resolve => {
+          und.convert(content.html, (err, markdown) => {
             resolve(err ? content.html : markdown);
           });
         }) : content.html;
@@ -306,9 +306,8 @@ Formatter.prototype.format = function (data) {
   return Promise.all([
     this._formatFrontMatter(data),
     this._formatContent(data)
-  ]).then(function (result) {
-    return result.join('');
-  });
+  ])
+    .then(result => result.join(''));
 };
 
 Formatter.prototype.formatFilename = function (data) {
