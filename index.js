@@ -220,7 +220,13 @@ Formatter.prototype.preFormat = function (data) {
 
   data = cloneDeepWith(data, value => value instanceof Buffer ? value : undefined);
 
-  data.properties.published = [data.properties.published && data.properties.published[0] ? new Date(data.properties.published[0]) : new Date()];
+  data.properties.published = [
+    data.properties.published && data.properties.published[0]
+      ? new Date(data.properties.published[0])
+      // Default to a time 15 seconds into the past to avoid issues with time being out of sync between
+      // the Micropub server and the build server, that has proven to be an issue otherwise.
+      : new Date(Date.now() - 15000)
+  ];
 
   const slug = this._formatSlug(data);
   data.properties.slug = slug ? [slug] : [];

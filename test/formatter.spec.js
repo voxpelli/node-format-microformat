@@ -352,7 +352,7 @@ describe('Formatter', function () {
   describe('preFormat', function () {
     it('should add published', function () {
       delete baseMicroformatData.properties.published;
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('properties.published[0]').that.is.an.instanceOf(Date).and.eql(new Date());
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('properties.published[0]').that.is.an.instanceOf(Date).and.eql(new Date(Date.now() - 15000));
     });
 
     it('should ensure slug', function () {
@@ -468,7 +468,7 @@ describe('Formatter', function () {
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
         .have.deep.property('properties.slug')
-        .that.deep.equals(['51600']);
+        .that.deep.equals([(51600 - 15) + '']);
     });
 
     it('should derive english language from content', function () {
