@@ -1,3 +1,7 @@
+## 0.9.1 (2017-01-21)
+
+* **Improvement:** By default publish all posts in the past by 15 seconds to avoid time sync issues
+
 ## 0.9.0 (2016-10-23)
 
 * **Breaking change:** Now requires Node v6
