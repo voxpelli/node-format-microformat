@@ -69,6 +69,9 @@ const Formatter = function (options) {
   this.filesStyle = options.filesStyle || 'media/:year-:month-:slug/:filesslug';
   this.permalinkStyle = options.permalinkStyle;
   this.deriveCategory = options.deriveCategory === undefined ? true : options.deriveCategory;
+
+  if (!this.filenameStyle.includes(':')) { throw new Error('Invalid filenameStyle, must include a placeholder'); }
+  if (!this.filesStyle.includes(':filesslug')) { throw new Error('Invalid filesStyle, must include :filesslug'); }
 };
 
 Formatter.prototype._resolveFrontMatterData = function (data) {
