@@ -11,7 +11,6 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node .",
     "mocha": "NODE_ENV=test istanbul cover _mocha -- -u exports -R spec test/**/*.spec.js",
     "dependency-check": "JS_FILES=\"*.js test/*.js\" && dependency-check . $JS_FILES && dependency-check . $JS_FILES --unused --no-dev",
     "test": "installed-check -e && eslint . && npm run dependency-check && npm run mocha",
