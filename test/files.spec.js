@@ -101,5 +101,25 @@ describe('Files', function () {
           'media/2015-06-awesomeness-is-awesome/foo.mp3'
         ]);
     });
+
+    it('should support configurable files styles', function () {
+      formatter = new Formatter({
+        filesStyle: 'files/:year/:month/:slug/:filesslug'
+      });
+
+      baseMicroformatData.files = {
+        photo: [{ filename: 'bar.png', buffer: new Buffer('sampledata') }]
+      };
+
+      return formatter._preFormatFiles(baseMicroformatData)
+        .should.eventually
+        .have.property('files')
+        .that.deep.equals([
+          {
+            filename: 'files/2015/06/awesomeness-is-awesome/bar.png',
+            buffer: new Buffer('sampledata')
+          }
+        ]);
+    });
   });
 });

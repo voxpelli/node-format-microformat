@@ -1,6 +1,7 @@
 ## 0.10.0 (YYYY-MM-DD)
 
-* **Feature:** Made filename style configurable
+* **Feature:** Made post's filename configurable through `filenameStyle`
+* **Feature:** Made uploaded files' filename style configurable through `filesStyle`
 
 ## 0.9.1 (2017-01-21)
 

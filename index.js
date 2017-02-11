@@ -4,7 +4,6 @@ const pathModule = require('path');
 const urlModule = require('url');
 const escapeHtml = require('escape-html');
 const yaml = require('js-yaml');
-const strftime = require('strftime');
 const ent = require('ent');
 const Upndown = require('upndown');
 const franc = require('franc');
@@ -67,6 +66,7 @@ const Formatter = function (options) {
   this.defaults = options.defaults;
   this.deriveLanguages = options.deriveLanguages || false;
   this.filenameStyle = options.filenameStyle || '_posts/:year-:month-:day-:slug';
+  this.filesStyle = options.filesStyle || 'media/:year-:month-:slug/:filesslug';
   this.permalinkStyle = options.permalinkStyle;
   this.deriveCategory = options.deriveCategory === undefined ? true : options.deriveCategory;
 };
@@ -373,9 +373,10 @@ Formatter.prototype._formatFilesSlug = function (type, file) {
 };
 
 Formatter.prototype.formatFilesFilename = function (type, file, data) {
-  const slug = data.properties.slug[0];
-  const filename = this._formatFilesSlug(type, file);
-  return Promise.resolve('media/' + strftime('%Y-%m', data.properties.published[0]) + (slug ? '-' + slug : '') + '/' + filename);
+  const filesStyle = this.filesStyle.split(':filesslug').join(this._formatFilesSlug(type, file));
+
+  return this._getJekyllResource(data, { skipFilename: true })
+    .then(jekyllResource => jekyllUtils.generateUrl(filesStyle, jekyllResource).replace(/^\/+/, ''));
 };
 
 Formatter.prototype.formatFilesURL = function (type, file, data) {
