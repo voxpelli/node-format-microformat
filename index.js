@@ -1,5 +1,6 @@
 'use strict';
 
+const pathModule = require('path');
 const urlModule = require('url');
 const escapeHtml = require('escape-html');
 const yaml = require('js-yaml');
@@ -65,6 +66,7 @@ const Formatter = function (options) {
   this.contentSlug = !!options.contentSlug;
   this.defaults = options.defaults;
   this.deriveLanguages = options.deriveLanguages || false;
+  this.filenameStyle = options.filenameStyle || '_posts/:year-:month-:day-:slug';
   this.permalinkStyle = options.permalinkStyle;
   this.deriveCategory = options.deriveCategory === undefined ? true : options.deriveCategory;
 };
@@ -308,9 +310,9 @@ Formatter.prototype.preFormat = function (data) {
   return result;
 };
 
-Formatter.prototype._precalculate = function (formattedData) {
+Formatter.prototype._precalculate = function (formattedData, { skipFilename } = {}) {
   return Promise.all([
-    this.formatFilename(formattedData),
+    skipFilename ? undefined : this.formatFilename(formattedData),
     this._resolveFrontMatterData(formattedData)
   ])
     .then(result => ({
@@ -328,21 +330,23 @@ Formatter.prototype.format = function (data) {
     .then(result => result.join(''));
 };
 
-Formatter.prototype.formatFilename = function (data) {
-  const slug = data.properties.slug[0];
-
-  return Promise.resolve(
-    '_posts/' +
-    strftime('%Y-%m-%d', data.properties.published[0]) +
-    (slug ? '-' + slug : '') +
-    (this.markdown ? '.md' : '.html')
-  );
+Formatter.prototype._getFileExtension = function () {
+  return this.markdown ? 'md' : 'html';
 };
 
-Formatter.prototype._getJekyllResource = function (data) {
-  return Promise.resolve(data.formattedData ? data : this._precalculate(data))
+Formatter.prototype.formatFilename = function (data) {
+  return this._getJekyllResource(data, { skipFilename: true })
+    .then(jekyllResource =>
+      jekyllUtils.generateUrl(this.filenameStyle, jekyllResource).replace(/^\/+/, '') +
+      '.' +
+      this._getFileExtension()
+    );
+};
+
+Formatter.prototype._getJekyllResource = function (data, { skipFilename } = {}) {
+  return Promise.resolve(data.formattedData ? data : this._precalculate(data, { skipFilename }))
     .then(data => ({
-      basename_without_ext: data.filename, // TODO: Complete
+      basename_without_ext: data.filename ? pathModule.basename(data.filename, this._getFileExtension()) : data.frontMatterData.slug,
       date: data.formattedData.properties.published[0],
       data: {
         categories: data.frontMatterData.category ? [].concat(data.frontMatterData.category) : [],
@@ -383,7 +387,7 @@ Formatter.prototype.formatAll = function (data) {
   return this.preFormat(data)
     .then(formattedData => this._precalculate(formattedData))
     .then(result => Promise.all([
-      result.filename,
+      this.formatFilename(result),
       this.formatURL(result, this.relativeTo),
       this.format(result),
       result.formattedData.files,

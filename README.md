@@ -71,6 +71,7 @@ formatter.preFormat(micropubDocument)
 * **defaults** – a `micropubDocument` with defaults that will be added as part of the `preFormat()`. Useful to eg. ensure that all documents have a language explicitly set.
 * **deriveCategory** – a method that's provided the properties of the post and which returns a dervice category – or `false` to disable default category deriving
 * **deriveLanguages** – an array defining what languages, using [ISO 639-3](https://en.wikipedia.org/wiki/ISO_639-3), to autodetect – or `true` to try and autodetect everything
+* **filenameStyle** – a filename style in the same form as the Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/) Should not include file extension. Defaults to: `_posts/:year-:month-:day-:slug`
 * **permalinkStyle** – a Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/). Defaults to Jekyll's default: `date`
 
 ## Methods

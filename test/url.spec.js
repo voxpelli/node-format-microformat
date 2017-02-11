@@ -41,5 +41,12 @@ describe('URL', function () {
       baseMicroformatData.derived = { category: 'interaction' };
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('interaction/2015/06/awesomeness-is-awesome/');
     });
+
+    it('should support name in permalink style', function () {
+      formatter = new Formatter({
+        permalinkStyle: '/:name'
+      });
+      return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015-06-30-awesomeness-is-awesome');
+    });
   });
 });

@@ -29,5 +29,12 @@ describe('Filename', function () {
       formatter = new Formatter({ noMarkdown: true });
       return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-30-awesomeness-is-awesome.html');
     });
+
+    it('should support custom filename style', function () {
+      formatter = new Formatter({
+        filenameStyle: 'content/notes/:year/:month/:slug'
+      });
+      return formatter.formatFilename(baseMicroformatData).should.eventually.equal('content/notes/2015/06/awesomeness-is-awesome.md');
+    });
   });
 });

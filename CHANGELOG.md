@@ -1,3 +1,7 @@
+## 0.10.0 (YYYY-MM-DD)
+
+* **Feature:** Made filename style configurable
+
 ## 0.9.1 (2017-01-21)
 
 * **Improvement:** By default publish all posts in the past by 15 seconds to avoid time sync issues
