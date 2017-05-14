@@ -1,4 +1,4 @@
-## 0.10.0 (YYYY-MM-DD)
+## 0.10.0 (2017-05-14)
 
 * **Feature:** Made post's filename configurable through `filenameStyle`
 * **Feature:** Made uploaded files' filename style configurable through `filesStyle`
