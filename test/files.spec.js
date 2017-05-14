@@ -32,12 +32,12 @@ describe('Files', function () {
 
   describe('_preFormatFiles', function () {
     it('should format files correctly', function () {
-      const bufferFoo = new Buffer('sampledata');
+      const bufferFoo = Buffer.from('sampledata');
 
       baseMicroformatData.files = {
         photo: [
           { filename: 'foo.jpg', buffer: bufferFoo },
-          { filename: 'bar.png', buffer: new Buffer('sampledata') }
+          { filename: 'bar.png', buffer: Buffer.from('sampledata') }
         ]
       };
 
@@ -49,11 +49,11 @@ describe('Files', function () {
         .that.deep.equals([
           {
             filename: 'media/2015-06-awesomeness-is-awesome/foo.jpg',
-            buffer: new Buffer('sampledata')
+            buffer: Buffer.from('sampledata')
           },
           {
             filename: 'media/2015-06-awesomeness-is-awesome/bar.png',
-            buffer: new Buffer('sampledata')
+            buffer: Buffer.from('sampledata')
           }
         ])
         .and.has.deep.property('[0].buffer', bufferFoo);
@@ -61,9 +61,9 @@ describe('Files', function () {
 
     it('should format file URL:s correctly', function () {
       baseMicroformatData.files = {
-        photo: [{ filename: 'foo.jpg', buffer: new Buffer('sampledata') }],
-        video: [{ filename: 'foo.mp4', buffer: new Buffer('sampledata') }],
-        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }]
+        photo: [{ filename: 'foo.jpg', buffer: Buffer.from('sampledata') }],
+        video: [{ filename: 'foo.mp4', buffer: Buffer.from('sampledata') }],
+        audio: [{ filename: 'foo.mp3', buffer: Buffer.from('sampledata') }]
       };
 
       return formatter._preFormatFiles(baseMicroformatData)
@@ -78,7 +78,7 @@ describe('Files', function () {
       formatter = new Formatter('http://example.com/bar/');
 
       baseMicroformatData.files = {
-        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }]
+        audio: [{ filename: 'foo.mp3', buffer: Buffer.from('sampledata') }]
       };
 
       return formatter._preFormatFiles(baseMicroformatData)
@@ -90,7 +90,7 @@ describe('Files', function () {
     it('should honor any pre-existing URL:s', function () {
       baseMicroformatData.properties.audio = ['http://example.com/pre-existing/url'];
       baseMicroformatData.files = {
-        audio: [{ filename: 'foo.mp3', buffer: new Buffer('sampledata') }]
+        audio: [{ filename: 'foo.mp3', buffer: Buffer.from('sampledata') }]
       };
 
       return formatter._preFormatFiles(baseMicroformatData)
@@ -108,7 +108,7 @@ describe('Files', function () {
       });
 
       baseMicroformatData.files = {
-        photo: [{ filename: 'bar.png', buffer: new Buffer('sampledata') }]
+        photo: [{ filename: 'bar.png', buffer: Buffer.from('sampledata') }]
       };
 
       return formatter._preFormatFiles(baseMicroformatData)
@@ -117,7 +117,7 @@ describe('Files', function () {
         .that.deep.equals([
           {
             filename: 'files/2015/06/awesomeness-is-awesome/bar.png',
-            buffer: new Buffer('sampledata')
+            buffer: Buffer.from('sampledata')
           }
         ]);
     });

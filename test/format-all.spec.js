@@ -22,7 +22,7 @@ describe('FormatAll', function () {
 
   describe('formatAll', function () {
     it('should format everything correctly', function () {
-      const photoBuffer = new Buffer('sampledata');
+      const photoBuffer = Buffer.from('sampledata');
 
       baseMicroformatData.files = {
         photo: [
