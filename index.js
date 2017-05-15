@@ -69,6 +69,14 @@ const objectPromiseAll = function (obj, mapMethod) {
     .then(result => zipObject(keys, result));
 };
 
+const resolveValue = function (value, arg) {
+  if (typeof value === 'function') {
+    value = value(arg);
+  }
+
+  return Promise.resolve(value);
+};
+
 const Formatter = function (options) {
   if (typeof options === 'string') {
     options = { relativeTo: options };
@@ -361,7 +369,7 @@ Formatter.prototype._getFileExtension = function () {
 Formatter.prototype.formatFilename = function (data) {
   return objectPromiseAll({
     jekyllResource: this._getJekyllResource(data, { skipFilename: true }),
-    filenameStyle: typeof this.filenameStyle === 'function' ? this.filenameStyle(data) : this.filenameStyle
+    filenameStyle: resolveValue(this.filenameStyle, data)
   })
     .then(({ jekyllResource, filenameStyle }) =>
       jekyllUtils.generateUrl(filenameStyle, jekyllResource).replace(/^\/+/, '') +
@@ -402,7 +410,7 @@ Formatter.prototype._formatFilesSlug = function (type, file) {
 Formatter.prototype.formatFilesFilename = function (type, file, data) {
   return objectPromiseAll({
     jekyllResource: this._getJekyllResource(data, { skipFilename: true }),
-    filesStyle: typeof this.filesStyle === 'function' ? this.filesStyle(data) : this.filesStyle
+    filesStyle: resolveValue(this.filesStyle, data)
   })
     .then(({ jekyllResource, filesStyle }) => ({
       jekyllResource,
