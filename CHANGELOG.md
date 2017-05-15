@@ -1,3 +1,7 @@
+## 0.10.1 (YYYY-MM-DD)
+
+* **Improvement:** Make `filenameStyle`, `filesStyle` and `permalinkStyle` configurable through a callback
+
 ## 0.10.0 (2017-05-14)
 
 * **Feature:** Made post's filename configurable through `filenameStyle`

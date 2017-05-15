@@ -75,6 +75,8 @@ formatter.preFormat(micropubDocument)
 * **filesStyle** – the filename style of uploaded files, in an extended form of the Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/). Should not include file extension, but should include `:filesslug`. Defaults to: `media/:year-:month-:slug/:filesslug`
 * **permalinkStyle** – a Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/). Defaults to Jekyll's default: `date`
 
+`filenameStyle`, `filesStyle` and `permalinkStyle` can all be set directly or through a callback that's given some data and that callback might either return a value directly or return a `Promise` that eventually resolves to the value.
+
 ## Methods
 
 * **formatAll(micropubDocument)** – `preFormat`:s and formats everything. Returns a `Promise`that resolves to an object with the keys `filename`, `url`, `content`, `files` and `raw`.
