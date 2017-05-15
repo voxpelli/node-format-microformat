@@ -53,6 +53,22 @@ const semiKebabCase = function (name) {
     .replace(whitespaceRegexp, '-');
 };
 
+const zipObject = function (keys, values) {
+  const result = {};
+
+  keys.forEach((key, i) => {
+    result[key] = values[i];
+  });
+
+  return result;
+};
+
+const objectPromiseAll = function (obj, mapMethod) {
+  const keys = Object.keys(obj);
+  return Promise.all(keys.map(key => mapMethod ? mapMethod(obj[key], key) : obj[key]))
+    .then(result => zipObject(keys, result));
+};
+
 const Formatter = function (options) {
   if (typeof options === 'string') {
     options = { relativeTo: options };
@@ -70,8 +86,13 @@ const Formatter = function (options) {
   this.permalinkStyle = options.permalinkStyle;
   this.deriveCategory = options.deriveCategory === undefined ? true : options.deriveCategory;
 
-  if (!this.filenameStyle.includes(':')) { throw new Error('Invalid filenameStyle, must include a placeholder'); }
-  if (!this.filesStyle.includes(':filesslug')) { throw new Error('Invalid filesStyle, must include :filesslug'); }
+  if (typeof this.filenameStyle !== 'function' && !this.filenameStyle.includes(':')) {
+    throw new Error('Invalid filenameStyle, must include a placeholder');
+  }
+
+  if (typeof this.filesStyle !== 'function' && !this.filesStyle.includes(':filesslug')) {
+    throw new Error('Invalid filesStyle, must include :filesslug');
+  }
 };
 
 Formatter.prototype._resolveFrontMatterData = function (data) {
@@ -338,9 +359,12 @@ Formatter.prototype._getFileExtension = function () {
 };
 
 Formatter.prototype.formatFilename = function (data) {
-  return this._getJekyllResource(data, { skipFilename: true })
-    .then(jekyllResource =>
-      jekyllUtils.generateUrl(this.filenameStyle, jekyllResource).replace(/^\/+/, '') +
+  return objectPromiseAll({
+    jekyllResource: this._getJekyllResource(data, { skipFilename: true }),
+    filenameStyle: typeof this.filenameStyle === 'function' ? this.filenameStyle(data) : this.filenameStyle
+  })
+    .then(({ jekyllResource, filenameStyle }) =>
+      jekyllUtils.generateUrl(filenameStyle, jekyllResource).replace(/^\/+/, '') +
       '.' +
       this._getFileExtension()
     );
@@ -376,10 +400,15 @@ Formatter.prototype._formatFilesSlug = function (type, file) {
 };
 
 Formatter.prototype.formatFilesFilename = function (type, file, data) {
-  const filesStyle = this.filesStyle.split(':filesslug').join(this._formatFilesSlug(type, file));
-
-  return this._getJekyllResource(data, { skipFilename: true })
-    .then(jekyllResource => jekyllUtils.generateUrl(filesStyle, jekyllResource).replace(/^\/+/, ''));
+  return objectPromiseAll({
+    jekyllResource: this._getJekyllResource(data, { skipFilename: true }),
+    filesStyle: typeof this.filesStyle === 'function' ? this.filesStyle(data) : this.filesStyle
+  })
+    .then(({ jekyllResource, filesStyle }) => ({
+      jekyllResource,
+      filesStyle: filesStyle.split(':filesslug').join(this._formatFilesSlug(type, file))
+    }))
+    .then(({ jekyllResource, filesStyle }) => jekyllUtils.generateUrl(filesStyle, jekyllResource).replace(/^\/+/, ''));
 };
 
 Formatter.prototype.formatFilesURL = function (type, file, data) {

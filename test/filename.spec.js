@@ -2,8 +2,11 @@
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
 
 chai.use(chaiAsPromised);
+chai.use(sinonChai);
 chai.should();
 
 describe('Filename', function () {
@@ -12,12 +15,18 @@ describe('Filename', function () {
 
   let formatter;
   let baseMicroformatData;
+  let sandbox;
 
   beforeEach(function () {
     const fixtures = getFixtures();
 
     formatter = new Formatter();
     baseMicroformatData = fixtures.baseMicroformatData;
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function () {
+    sandbox.restore();
   });
 
   describe('formatFilename', function () {
@@ -34,6 +43,25 @@ describe('Filename', function () {
       formatter = new Formatter({
         filenameStyle: 'content/notes/:year/:month/:slug'
       });
+      return formatter.formatFilename(baseMicroformatData).should.eventually.equal('content/notes/2015/06/awesomeness-is-awesome.md');
+    });
+
+    it('should support custom filename style through callback', () => {
+      const filenameStyle = sinon.stub().returns('content/notes/:year/:month/:slug');
+
+      formatter = new Formatter({ filenameStyle });
+
+      return formatter.formatFilename(baseMicroformatData).should.eventually.equal('content/notes/2015/06/awesomeness-is-awesome.md')
+        .then(() => {
+          filenameStyle.should.have.been.called;
+        });
+    });
+
+    it('should support custom filename style through callback returning Promise', () => {
+      const filenameStyle = sinon.stub().resolves('content/notes/:year/:month/:slug');
+
+      formatter = new Formatter({ filenameStyle });
+
       return formatter.formatFilename(baseMicroformatData).should.eventually.equal('content/notes/2015/06/awesomeness-is-awesome.md');
     });
   });

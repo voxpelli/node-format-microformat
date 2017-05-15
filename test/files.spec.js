@@ -2,8 +2,11 @@
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
 
 chai.use(chaiAsPromised);
+chai.use(sinonChai);
 chai.should();
 
 describe('Files', function () {
@@ -12,12 +15,18 @@ describe('Files', function () {
 
   let formatter;
   let baseMicroformatData;
+  let sandbox;
 
   beforeEach(function () {
     const fixtures = getFixtures();
 
     formatter = new Formatter();
     baseMicroformatData = fixtures.baseMicroformatData;
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function () {
+    sandbox.restore();
   });
 
   describe('_formatFilesSlug', function () {
@@ -106,6 +115,49 @@ describe('Files', function () {
       formatter = new Formatter({
         filesStyle: 'files/:year/:month/:slug/:filesslug'
       });
+
+      baseMicroformatData.files = {
+        photo: [{ filename: 'bar.png', buffer: Buffer.from('sampledata') }]
+      };
+
+      return formatter._preFormatFiles(baseMicroformatData)
+        .should.eventually
+        .have.property('files')
+        .that.deep.equals([
+          {
+            filename: 'files/2015/06/awesomeness-is-awesome/bar.png',
+            buffer: Buffer.from('sampledata')
+          }
+        ]);
+    });
+
+    it('should support configurable files styles through callback', function () {
+      const filesStyle = sinon.stub().returns('files/:year/:month/:slug/:filesslug');
+
+      formatter = new Formatter({ filesStyle });
+
+      baseMicroformatData.files = {
+        photo: [{ filename: 'bar.png', buffer: Buffer.from('sampledata') }]
+      };
+
+      return formatter._preFormatFiles(baseMicroformatData)
+        .should.eventually
+        .have.property('files')
+        .that.deep.equals([
+          {
+            filename: 'files/2015/06/awesomeness-is-awesome/bar.png',
+            buffer: Buffer.from('sampledata')
+          }
+        ])
+        .then(() => {
+          filesStyle.should.have.been.called;
+        });
+    });
+
+    it('should support configurable files styles through callback returning Promise', function () {
+      const filesStyle = sinon.stub().resolves('files/:year/:month/:slug/:filesslug');
+
+      formatter = new Formatter({ filesStyle });
 
       baseMicroformatData.files = {
         photo: [{ filename: 'bar.png', buffer: Buffer.from('sampledata') }]
