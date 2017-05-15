@@ -77,6 +77,10 @@ const resolveValue = function (value, arg) {
   return Promise.resolve(value);
 };
 
+const resolveCallbackParameter = function (value, data) {
+  return resolveValue(value, (data.formattedData || data).properties);
+};
+
 const Formatter = function (options) {
   if (typeof options === 'string') {
     options = { relativeTo: options };
@@ -369,7 +373,7 @@ Formatter.prototype._getFileExtension = function () {
 Formatter.prototype.formatFilename = function (data) {
   return objectPromiseAll({
     jekyllResource: this._getJekyllResource(data, { skipFilename: true }),
-    filenameStyle: resolveValue(this.filenameStyle, data)
+    filenameStyle: resolveCallbackParameter(this.filenameStyle, data)
   })
     .then(({ jekyllResource, filenameStyle }) =>
       jekyllUtils.generateUrl(filenameStyle, jekyllResource).replace(/^\/+/, '') +
@@ -393,7 +397,7 @@ Formatter.prototype._getJekyllResource = function (data, { skipFilename } = {}) 
 Formatter.prototype.formatURL = function (data) {
   return objectPromiseAll({
     jekyllResource: this._getJekyllResource(data),
-    permalinkStyle: resolveValue(this.permalinkStyle, data)
+    permalinkStyle: resolveCallbackParameter(this.permalinkStyle, data)
   })
     .then(({ jekyllResource, permalinkStyle }) => {
       let url = jekyllUtils.generateUrl(permalinkStyle, jekyllResource).replace(/^\/+/, '');
@@ -413,7 +417,7 @@ Formatter.prototype._formatFilesSlug = function (type, file) {
 Formatter.prototype.formatFilesFilename = function (type, file, data) {
   return objectPromiseAll({
     jekyllResource: this._getJekyllResource(data, { skipFilename: true }),
-    filesStyle: resolveValue(this.filesStyle, data)
+    filesStyle: resolveCallbackParameter(this.filesStyle, data)
   })
     .then(({ jekyllResource, filesStyle }) => ({
       jekyllResource,
