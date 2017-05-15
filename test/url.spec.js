@@ -2,8 +2,11 @@
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
 
 chai.use(chaiAsPromised);
+chai.use(sinonChai);
 chai.should();
 
 describe('URL', function () {
@@ -12,6 +15,7 @@ describe('URL', function () {
 
   let formatter;
   let baseMicroformatData;
+  let sandbox;
 
   beforeEach(function () {
     const fixtures = getFixtures();
@@ -20,6 +24,11 @@ describe('URL', function () {
       permalinkStyle: '/:categories/:year/:month/:title/'
     });
     baseMicroformatData = fixtures.baseMicroformatData;
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function () {
+    sandbox.restore();
   });
 
   describe('formatURL', function () {
@@ -46,6 +55,22 @@ describe('URL', function () {
       formatter = new Formatter({
         permalinkStyle: '/:name'
       });
+      return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015-06-30-awesomeness-is-awesome');
+    });
+
+    it('should support custom permalink style through callback', function () {
+      const permalinkStyle = sinon.stub().returns('/:name');
+
+      formatter = new Formatter({ permalinkStyle });
+
+      return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015-06-30-awesomeness-is-awesome');
+    });
+
+    it('should support custom permalink style through callback returning Promise', function () {
+      const permalinkStyle = sinon.stub().resolves('/:name');
+
+      formatter = new Formatter({ permalinkStyle });
+
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015-06-30-awesomeness-is-awesome');
     });
   });

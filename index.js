@@ -391,9 +391,12 @@ Formatter.prototype._getJekyllResource = function (data, { skipFilename } = {}) 
 };
 
 Formatter.prototype.formatURL = function (data) {
-  return this._getJekyllResource(data)
-    .then(jekyllResource => {
-      let url = jekyllUtils.generateUrl(this.permalinkStyle, jekyllResource).replace(/^\/+/, '');
+  return objectPromiseAll({
+    jekyllResource: this._getJekyllResource(data),
+    permalinkStyle: resolveValue(this.permalinkStyle, data)
+  })
+    .then(({ jekyllResource, permalinkStyle }) => {
+      let url = jekyllUtils.generateUrl(permalinkStyle, jekyllResource).replace(/^\/+/, '');
 
       if (this.relativeTo) {
         url = urlModule.resolve(this.relativeTo, url);
