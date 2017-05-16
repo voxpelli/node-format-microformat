@@ -1,4 +1,4 @@
-## 0.10.1 (YYYY-MM-DD)
+## 0.10.1 (2017-05-16)
 
 * **Improvement:** Make `filenameStyle`, `filesStyle` and `permalinkStyle` configurable through a callback
 
