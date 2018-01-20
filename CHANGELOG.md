@@ -1,6 +1,7 @@
-## 0.10.2 (YYYY-MM-DD)
+## 0.10.2 (2018-01-20)
 
 * **Feature:** Made post layout configurable through `layoutName`
+* **Bug fix:** Fixed issue with sending the same object more than once to `preFormat()`
 
 ## 0.10.1 (2017-05-16)
 
