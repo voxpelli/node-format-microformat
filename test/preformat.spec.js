@@ -32,75 +32,75 @@ describe('PreFormat', function () {
   describe('preFormat', function () {
     it('should add published', function () {
       delete baseMicroformatData.properties.published;
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('properties.published[0]').that.is.an.instanceOf(Date).and.eql(new Date(Date.now() - 15000));
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('properties.published[0]').that.is.an.instanceOf(Date).and.eql(new Date(Date.now() - 15000));
     });
 
     it('should ensure slug', function () {
       delete baseMicroformatData.properties.slug;
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('properties.slug[0]', 'awesomeness-is-awesome');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('properties.slug[0]', 'awesomeness-is-awesome');
     });
 
     it('should derive social category for replies', function () {
       baseMicroformatData.properties['in-reply-to'] = ['http://example.com/replied/to/page'];
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'social');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.category', 'social');
     });
 
     it('should derive social category for likes', function () {
       baseMicroformatData.properties['like-of'] = ['http://example.com/liked/page'];
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'social');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.category', 'social');
     });
 
     it('should derive social category for notes', function () {
       delete baseMicroformatData.properties.name;
       delete baseMicroformatData.properties.slug;
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'social');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.category', 'social');
     });
 
     it('should derive links category for bookmarks', function () {
       baseMicroformatData.properties.bookmark = ['http://example.com/bookmarked/page'];
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'links');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.category', 'links');
     });
 
     it('should derive links category for alternative bookmark property', function () {
       baseMicroformatData.properties['bookmark-of'] = ['http://example.com/bookmarked/page'];
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'links');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.category', 'links');
     });
 
     it('should derive links category for reposts', function () {
       baseMicroformatData.properties['repost-of'] = ['http://example.com/reposted/page'];
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'links');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.category', 'links');
     });
 
     it('should derive links category for title-less bookmarks', function () {
       delete baseMicroformatData.properties.name;
       delete baseMicroformatData.properties.slug;
       baseMicroformatData.properties.bookmark = ['http://example.com/bookmarked/page'];
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'links');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.category', 'links');
     });
 
     it('should not derive interaction category for normal post', function () {
-      return formatter.preFormat(baseMicroformatData).should.eventually.not.have.deep.property('derived.category');
+      return formatter.preFormat(baseMicroformatData).should.eventually.not.have.nested.property('derived.category');
     });
 
     it('should not derive interaction category when opted out of', function () {
       formatter = new Formatter({ deriveCategory: false });
       baseMicroformatData.properties['in-reply-to'] = ['http://example.com/replied/to/page'];
-      return formatter.preFormat(baseMicroformatData).should.eventually.not.have.deep.property('derived.category');
+      return formatter.preFormat(baseMicroformatData).should.eventually.not.have.nested.property('derived.category');
     });
 
     it('should use result of deriveCategory() method when provided', function () {
       formatter = new Formatter({ deriveCategory: () => 'foo' });
-      return formatter.preFormat(baseMicroformatData).should.eventually.have.deep.property('derived.category', 'foo');
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.category', 'foo');
     });
 
     it('should extract person tags from regular tags', function () {
       baseMicroformatData.properties.category = ['http://example.com/', 'foo', 'http://example.net/'];
       return formatter.preFormat(baseMicroformatData).then(function (result) {
-        result.should.have.deep.property('derived.personTags').that.deep.equals([
+        result.should.have.nested.property('derived.personTags').that.deep.equals([
           'http://example.com/',
           'http://example.net/'
         ]);
-        result.should.have.deep.property('properties.category').that.deep.equals(['foo']);
+        result.should.have.nested.property('properties.category').that.deep.equals(['foo']);
       });
     });
 
@@ -122,7 +122,7 @@ describe('PreFormat', function () {
       });
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.lang')
+        .have.nested.property('properties.lang')
         .that.deep.equals(['en']);
     });
 
@@ -136,7 +136,7 @@ describe('PreFormat', function () {
       });
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.content')
+        .have.nested.property('properties.content')
         .that.deep.equals(['hello world']);
     });
 
@@ -147,7 +147,7 @@ describe('PreFormat', function () {
 
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.slug')
+        .have.nested.property('properties.slug')
         .that.deep.equals([(51600 - 15) + '']);
     });
 
@@ -160,7 +160,7 @@ describe('PreFormat', function () {
 
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.lang')
+        .have.nested.property('properties.lang')
         .that.deep.equals(['en']);
     });
 
@@ -173,7 +173,7 @@ describe('PreFormat', function () {
 
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.lang')
+        .have.nested.property('properties.lang')
         .that.deep.equals(['sv']);
     });
 
@@ -181,7 +181,7 @@ describe('PreFormat', function () {
       baseMicroformatData.properties.content = ['Det var en gång en liten utter som hette Skog. Något ironiskt så för skog var allt annat än det som fanns kvar efter att Skog haft sin framfart i sitt grannskap. Varenda liten plätt var kal som åker. Men Skog var inte ledsen för det. Han hade ju trots allt sig själv.'];
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .not.have.deep.property('properties.lang');
+        .not.have.nested.property('properties.lang');
     });
 
     it('should not require a whitelist for language detection', function () {
@@ -193,7 +193,7 @@ describe('PreFormat', function () {
 
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.lang')
+        .have.nested.property('properties.lang')
         .that.deep.equals(['de']);
     });
 
@@ -206,7 +206,7 @@ describe('PreFormat', function () {
 
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .not.have.deep.property('properties.lang');
+        .not.have.nested.property('properties.lang');
     });
 
     it('should respect defined language, but convert to ISO 639-1', function () {
@@ -219,7 +219,7 @@ describe('PreFormat', function () {
 
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.lang')
+        .have.nested.property('properties.lang')
         .that.deep.equals(['en']);
     });
 
@@ -227,7 +227,7 @@ describe('PreFormat', function () {
       baseMicroformatData.properties.lang = ['123'];
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.lang')
+        .have.nested.property('properties.lang')
         .that.deep.equals(['123']);
     });
 
@@ -240,7 +240,7 @@ describe('PreFormat', function () {
 
       return formatter.preFormat(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.lang')
+        .have.nested.property('properties.lang')
         .that.deep.equals(['en']);
     });
   });

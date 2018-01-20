@@ -65,7 +65,7 @@ describe('Files', function () {
             buffer: Buffer.from('sampledata')
           }
         ])
-        .and.has.deep.property('[0].buffer', bufferFoo);
+        .and.has.nested.property('[0].buffer', bufferFoo);
     });
 
     it('should format file URL:s correctly', function () {
@@ -92,7 +92,7 @@ describe('Files', function () {
 
       return formatter._preFormatFiles(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.audio')
+        .have.nested.property('properties.audio')
         .that.deep.equals(['http://example.com/bar/media/2015-06-awesomeness-is-awesome/foo.mp3']);
     });
 
@@ -104,7 +104,7 @@ describe('Files', function () {
 
       return formatter._preFormatFiles(baseMicroformatData)
         .should.eventually
-        .have.deep.property('properties.audio')
+        .have.nested.property('properties.audio')
         .that.deep.equals([
           'http://example.com/pre-existing/url',
           'media/2015-06-awesomeness-is-awesome/foo.mp3'
