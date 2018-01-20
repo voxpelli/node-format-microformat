@@ -123,6 +123,21 @@ describe('PreFormat', function () {
       return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.category', 'foo');
     });
 
+    it('should disable the layout when instructed to', function () {
+      formatter = new Formatter({ layoutName: false });
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.layout', false);
+    });
+
+    it('should use result of layout() method when provided', function () {
+      formatter = new Formatter({ layoutName: () => 'foo' });
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.layout', 'foo');
+    });
+
+    it("should use value of layout when it's a string", function () {
+      formatter = new Formatter({ layoutName: 'bar' });
+      return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('derived.layout', 'bar');
+    });
+
     it('should extract person tags from regular tags', function () {
       baseMicroformatData.properties.category = ['http://example.com/', 'foo', 'http://example.net/'];
       return formatter.preFormat(baseMicroformatData).then(function (result) {

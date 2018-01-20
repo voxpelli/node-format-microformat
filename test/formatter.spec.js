@@ -158,6 +158,33 @@ describe('Formatter', function () {
       );
     });
 
+    it('should handle derived layout', function () {
+      baseMicroformatData.derived = { layout: 'epiclayout' };
+
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: epiclayout\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        '---\n' +
+        'hello world\n'
+      );
+    });
+
+    it('should handle disabled layout', function () {
+      baseMicroformatData.derived = { layout: false };
+
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        '---\n' +
+        'hello world\n'
+      );
+    });
+
     it('should handle derived person-tags', function () {
       baseMicroformatData.derived = { personTags: ['http://example.com/'] };
 

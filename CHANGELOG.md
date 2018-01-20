@@ -1,3 +1,7 @@
+## 0.10.2 (YYYY-MM-DD)
+
+* **Feature:** Made post layout configurable through `layoutName`
+
 ## 0.10.1 (2017-05-16)
 
 * **Improvement:** Make `filenameStyle`, `filesStyle` and `permalinkStyle` configurable through a callback

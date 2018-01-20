@@ -97,6 +97,7 @@ const Formatter = function (options) {
   this.filesStyle = options.filesStyle || 'media/:year-:month-:slug/:filesslug';
   this.permalinkStyle = options.permalinkStyle;
   this.deriveCategory = options.deriveCategory === undefined ? true : options.deriveCategory;
+  this.layoutName = options.layoutName;
 
   if (typeof this.filenameStyle !== 'function' && !this.filenameStyle.includes(':')) {
     throw new Error('Invalid filenameStyle, must include a placeholder');
@@ -114,7 +115,7 @@ Formatter.prototype._resolveFrontMatterData = function (data) {
   // TODO: Include the "type" property so that more than the now assumed "h-entry" can be supported
 
   const target = {
-    layout: 'micropubpost',
+    layout: derived.layout || 'micropubpost',
     date: source.published[0].toISOString(),
     title: ''
   };
@@ -139,6 +140,9 @@ Formatter.prototype._resolveFrontMatterData = function (data) {
     }
   });
 
+  if (derived.layout === false) {
+    delete target.layout;
+  }
   if (derived.category) {
     target.category = derived.category;
   }
@@ -317,9 +321,7 @@ Formatter.prototype.preFormat = function (data) {
 
   if (typeof this.deriveCategory === 'function') {
     data.derived.category = this.deriveCategory(data.properties);
-    if (!data.derived.category) {
-      delete data.derived.category;
-    }
+    if (!data.derived.category) { delete data.derived.category; }
   } else if (!this.deriveCategory) {
     // Do nothing
   } else if (
@@ -339,6 +341,20 @@ Formatter.prototype.preFormat = function (data) {
   defaultsDeep(data, this.defaults || {});
 
   let result = Promise.resolve(data);
+
+  if (this.layoutName !== undefined) {
+    result = result.then(data => {
+      return resolveCallbackParameter(this.layoutName, data)
+        .then(layout => {
+          if (layout === false) {
+            data.derived.layout = false;
+          } else if (layout) {
+            data.derived.layout = layout + '';
+          }
+          return data;
+        });
+    });
+  }
 
   if (!isEmpty(data.files)) {
     result = result.then(this._preFormatFiles.bind(this));

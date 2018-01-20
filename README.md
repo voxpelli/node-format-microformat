@@ -73,9 +73,10 @@ formatter.preFormat(micropubDocument)
 * **deriveLanguages** – an array defining what languages, using [ISO 639-3](https://en.wikipedia.org/wiki/ISO_639-3), to autodetect – or `true` to try and autodetect everything
 * **filenameStyle** – a filename style in the same form as the Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/). Should not include file extension. Defaults to: `_posts/:year-:month-:day-:slug`
 * **filesStyle** – the filename style of uploaded files, in an extended form of the Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/). Should not include file extension, but should include `:filesslug`. Defaults to: `media/:year-:month-:slug/:filesslug`
+* **layoutName** – the name of a layout that overrides the default `micropubpost` one, or `false` to remove the layout completely from the front matter
 * **permalinkStyle** – a Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/). Defaults to Jekyll's default: `date`
 
-`filenameStyle`, `filesStyle` and `permalinkStyle` can all be set directly or through a callback that's given some data and that callback might either return a value directly or return a `Promise` that eventually resolves to the value.
+`layoutName`, `filenameStyle`, `filesStyle` and `permalinkStyle` can all be set directly or through a callback that's given some data and that callback might either return a value directly or return a `Promise` that eventually resolves to the value.
 
 ## Methods
 
@@ -113,7 +114,7 @@ The ones with special handling are:
 
 There's also some defaults and derived values:
 
-* **layout** – always set to `micropubpost`
+* **layout** – by default set to `micropubpost`
 * **category** – derived from other `micropubDocument` properties and only used in some cases, like eg. for replies, likes and bookmarks – it's set to  `interaction`  for the first two and to `bookmark` for the last one
 
 An example of a generated Jekyll Front Matter:
