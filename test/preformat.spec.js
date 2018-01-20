@@ -4,6 +4,8 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 
+const cloneDeepWith = require('lodash.clonedeepwith');
+
 chai.use(chaiAsPromised);
 chai.should();
 
@@ -33,6 +35,34 @@ describe('PreFormat', function () {
     it('should add published', function () {
       delete baseMicroformatData.properties.published;
       return formatter.preFormat(baseMicroformatData).should.eventually.have.nested.property('properties.published[0]').that.is.an.instanceOf(Date).and.eql(new Date(Date.now() - 15000));
+    });
+
+    it('should not change source object', function () {
+      delete baseMicroformatData.properties.published;
+      const clonedSource = cloneDeepWith(baseMicroformatData);
+
+      return formatter.preFormat(baseMicroformatData)
+        .then(() => {
+          baseMicroformatData.properties.should.not.have.property('published');
+          baseMicroformatData.should.deep.equal(clonedSource);
+        });
+    });
+
+    it('should be possible to run multiple times', function () {
+      delete baseMicroformatData.properties.published;
+
+      const clonedSource = cloneDeepWith(baseMicroformatData);
+
+      return formatter.preFormat(baseMicroformatData)
+        .then(firstResult => {
+          firstResult.should.have.nested.property('properties.published[0]');
+          return formatter.preFormat(clonedSource)
+            .then(secondResult => {
+              secondResult.should.have.nested.property('properties.published[0]');
+              secondResult.should.deep.equal(firstResult);
+              secondResult.should.not.equal(firstResult);
+            });
+        });
     });
 
     it('should ensure slug', function () {

@@ -254,9 +254,10 @@ Formatter.prototype.preFormat = function (data) {
   if (data.preFormatted) {
     return Promise.resolve(data);
   }
-  data.preFormatted = true;
 
   data = cloneDeepWith(data, value => value instanceof Buffer ? value : undefined);
+
+  data.preFormatted = true;
 
   data.properties.published = [
     data.properties.published && data.properties.published[0]
