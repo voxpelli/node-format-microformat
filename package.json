@@ -41,7 +41,7 @@
   "dependencies": {
     "ent": "^2.2.0",
     "escape-html": "^1.0.3",
-    "franc": "^1.1.1",
+    "franc": "^4.0.0",
     "iso-639-3": "^0.2.0",
     "jekyll-utils": "^0.1.1",
     "js-yaml": "^3.3.1",
