@@ -269,5 +269,21 @@ describe('Formatter', function () {
         '&lt;p&gt;Abc&lt;/p&gt;&lt;p&gt;123&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Foo&lt;/li&gt;&lt;li&gt;Bar&lt;/li&gt;&lt;/ul&gt;\n'
       );
     });
+
+    it('should not encode value to HTML if opted out', function () {
+      baseMicroformatData.properties.content = [{ value: '> Hello World' }];
+
+      formatter = new Formatter({ encodeHTML: false });
+
+      return formatter.format(baseMicroformatData).should.eventually.equal(
+        '---\n' +
+        'layout: micropubpost\n' +
+        'date: \'2015-06-30T14:34:01.000Z\'\n' +
+        'title: awesomeness is awesome\n' +
+        'slug: awesomeness-is-awesome\n' +
+        '---\n' +
+        '> Hello World\n'
+      );
+    });
   });
 });
