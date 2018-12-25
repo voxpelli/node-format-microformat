@@ -1,7 +1,7 @@
 'use strict';
 
 const pathModule = require('path');
-const urlModule = require('url');
+const { URL } = require('url');
 const escapeHtml = require('escape-html');
 const yaml = require('js-yaml');
 const ent = require('ent');
@@ -420,7 +420,7 @@ Formatter.prototype.formatURL = function (data) {
       let url = jekyllUtils.generateUrl(permalinkStyle, jekyllResource).replace(/^\/+/, '');
 
       if (this.relativeTo) {
-        url = urlModule.resolve(this.relativeTo, url);
+        url = (new URL(url, this.relativeTo)).toString();
       }
 
       return url;
@@ -445,7 +445,7 @@ Formatter.prototype.formatFilesFilename = function (type, file, data) {
 
 Formatter.prototype.formatFilesURL = function (type, file, data) {
   return this.formatFilesFilename(type, file, data)
-    .then(url => this.relativeTo ? urlModule.resolve(this.relativeTo, url) : url);
+    .then(url => this.relativeTo ? (new URL(url, this.relativeTo)).toString() : url);
 };
 
 Formatter.prototype.formatAll = function (data) {
