@@ -9,7 +9,7 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 chai.should();
 
-describe('Files', function () {
+describe('Files', () => {
   const Formatter = require('../');
   const getFixtures = require('./fixtures');
 
@@ -17,7 +17,7 @@ describe('Files', function () {
   let baseMicroformatData;
   let sandbox;
 
-  beforeEach(function () {
+  beforeEach(() => {
     const fixtures = getFixtures();
 
     formatter = new Formatter();
@@ -25,22 +25,22 @@ describe('Files', function () {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sandbox.restore();
   });
 
-  describe('_formatFilesSlug', function () {
-    it('should handle a regular filename', function () {
+  describe('_formatFilesSlug', () => {
+    it('should handle a regular filename', () => {
       formatter._formatFilesSlug('photo', { filename: 'example.jpg' }).should.equal('example.jpg');
     });
 
-    it('should handle a complex filename', function () {
+    it('should handle a complex filename', () => {
       formatter._formatFilesSlug('photo', { filename: '123.ExampleIs Very-Cool.jpg' }).should.equal('123.example-is-very-cool.jpg');
     });
   });
 
-  describe('_preFormatFiles', function () {
-    it('should format files correctly', function () {
+  describe('_preFormatFiles', () => {
+    it('should format files correctly', () => {
       const bufferFoo = Buffer.from('sampledata');
 
       baseMicroformatData.files = {
@@ -68,7 +68,7 @@ describe('Files', function () {
         .and.has.nested.property('[0].buffer', bufferFoo);
     });
 
-    it('should format file URL:s correctly', function () {
+    it('should format file URL:s correctly', () => {
       baseMicroformatData.files = {
         photo: [{ filename: 'foo.jpg', buffer: Buffer.from('sampledata') }],
         video: [{ filename: 'foo.mp4', buffer: Buffer.from('sampledata') }],
@@ -83,7 +83,7 @@ describe('Files', function () {
         .that.deep.equals(['media/2015-06-awesomeness-is-awesome/foo.mp4']);
     });
 
-    it('should make file URL:s absolute if relativeTo is defined', function () {
+    it('should make file URL:s absolute if relativeTo is defined', () => {
       formatter = new Formatter('http://example.com/bar/');
 
       baseMicroformatData.files = {
@@ -96,7 +96,7 @@ describe('Files', function () {
         .that.deep.equals(['http://example.com/bar/media/2015-06-awesomeness-is-awesome/foo.mp3']);
     });
 
-    it('should honor any pre-existing URL:s', function () {
+    it('should honor any pre-existing URL:s', () => {
       baseMicroformatData.properties.audio = ['http://example.com/pre-existing/url'];
       baseMicroformatData.files = {
         audio: [{ filename: 'foo.mp3', buffer: Buffer.from('sampledata') }]
@@ -111,7 +111,7 @@ describe('Files', function () {
         ]);
     });
 
-    it('should support configurable files styles', function () {
+    it('should support configurable files styles', () => {
       formatter = new Formatter({
         filesStyle: 'files/:year/:month/:slug/:filesslug'
       });
@@ -131,7 +131,7 @@ describe('Files', function () {
         ]);
     });
 
-    it('should support configurable files styles through callback', function () {
+    it('should support configurable files styles through callback', () => {
       const filesStyle = sinon.stub().returns('files/:year/:month/:slug/:filesslug');
 
       formatter = new Formatter({ filesStyle });
@@ -154,7 +154,7 @@ describe('Files', function () {
         });
     });
 
-    it('should support configurable files styles through callback returning Promise', function () {
+    it('should support configurable files styles through callback returning Promise', () => {
       const filesStyle = sinon.stub().resolves('files/:year/:month/:slug/:filesslug');
 
       formatter = new Formatter({ filesStyle });

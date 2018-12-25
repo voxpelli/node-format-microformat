@@ -6,22 +6,22 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 chai.should();
 
-describe('Formatter', function () {
+describe('Formatter', () => {
   const Formatter = require('../');
   const getFixtures = require('./fixtures');
 
   let formatter;
   let baseMicroformatData;
 
-  beforeEach(function () {
+  beforeEach(() => {
     const fixtures = getFixtures();
 
     formatter = new Formatter();
     baseMicroformatData = fixtures.baseMicroformatData;
   });
 
-  describe('format', function () {
-    it('should return a fully formatted page on sunny day content', function () {
+  describe('format', () => {
+    it('should return a fully formatted page on sunny day content', () => {
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
         'layout: micropubpost\n' +
@@ -33,7 +33,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle non-existing title', function () {
+    it('should handle non-existing title', () => {
       delete baseMicroformatData.properties.name;
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
@@ -47,7 +47,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle non-existing content', function () {
+    it('should handle non-existing content', () => {
       delete baseMicroformatData.properties.content;
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
@@ -60,7 +60,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle categories', function () {
+    it('should handle categories', () => {
       baseMicroformatData.properties.category = ['foo', 'bar'];
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
@@ -75,7 +75,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle language', function () {
+    it('should handle language', () => {
       baseMicroformatData.properties.lang = ['en'];
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
@@ -90,7 +90,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle additional microformat content', function () {
+    it('should handle additional microformat content', () => {
       baseMicroformatData.properties.foo = ['bar'];
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
@@ -106,7 +106,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should ignore urls', function () {
+    it('should ignore urls', () => {
       // TODO: We might want to eventually change this and actually expose the URL to Jekyll as the prefered permalink
       //      But when doing so we should also treat the URL as a unique identifier and make sure to replace any
       //      previous file that might have that same explicit or implied URL.
@@ -126,7 +126,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle a "like" document', function () {
+    it('should handle a "like" document', () => {
       delete baseMicroformatData.properties.name;
       delete baseMicroformatData.properties.content;
       baseMicroformatData.properties.slug = [];
@@ -143,7 +143,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle derived, real, categories', function () {
+    it('should handle derived, real, categories', () => {
       baseMicroformatData.derived = { category: 'interaction' };
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
@@ -158,7 +158,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle derived layout', function () {
+    it('should handle derived layout', () => {
       baseMicroformatData.derived = { layout: 'epiclayout' };
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
@@ -172,7 +172,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle disabled layout', function () {
+    it('should handle disabled layout', () => {
       baseMicroformatData.derived = { layout: false };
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
@@ -185,7 +185,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should handle derived person-tags', function () {
+    it('should handle derived person-tags', () => {
       baseMicroformatData.derived = { personTags: ['http://example.com/'] };
 
       return formatter.format(baseMicroformatData).should.eventually.equal(
@@ -201,7 +201,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should convert HTML to Markdown', function () {
+    it('should convert HTML to Markdown', () => {
       baseMicroformatData.properties.content = [{ html: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' }];
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
@@ -219,7 +219,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should not convert HTML to Markdown if opted out', function () {
+    it('should not convert HTML to Markdown if opted out', () => {
       baseMicroformatData.properties.content = [{ html: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' }];
 
       formatter = new Formatter({ noMarkdown: true });
@@ -235,7 +235,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should escape HTML if sent as plain text', function () {
+    it('should escape HTML if sent as plain text', () => {
       baseMicroformatData.properties.content = ['<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>'];
       return formatter.format(baseMicroformatData).should.eventually.equal(
         '---\n' +
@@ -248,7 +248,7 @@ describe('Formatter', function () {
       );
     });
 
-    it('should support content.value', function () {
+    it('should support content.value', () => {
       baseMicroformatData.properties.content = [
         { html: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' },
         { value: '<p>Abc</p><p>123</p><ul><li>Foo</li><li>Bar</li></ul>' }

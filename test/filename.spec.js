@@ -9,7 +9,7 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 chai.should();
 
-describe('Filename', function () {
+describe('Filename', () => {
   const Formatter = require('../');
   const getFixtures = require('./fixtures');
 
@@ -17,7 +17,7 @@ describe('Filename', function () {
   let baseMicroformatData;
   let sandbox;
 
-  beforeEach(function () {
+  beforeEach(() => {
     const fixtures = getFixtures();
 
     formatter = new Formatter();
@@ -25,21 +25,21 @@ describe('Filename', function () {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sandbox.restore();
   });
 
-  describe('formatFilename', function () {
-    it('should use slug', function () {
+  describe('formatFilename', () => {
+    it('should use slug', () => {
       return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-30-awesomeness-is-awesome.md');
     });
 
-    it('should have a HTML file type if opted out of Markdown', function () {
+    it('should have a HTML file type if opted out of Markdown', () => {
       formatter = new Formatter({ noMarkdown: true });
       return formatter.formatFilename(baseMicroformatData).should.eventually.equal('_posts/2015-06-30-awesomeness-is-awesome.html');
     });
 
-    it('should support custom filename style', function () {
+    it('should support custom filename style', () => {
       formatter = new Formatter({
         filenameStyle: 'content/notes/:year/:month/:slug'
       });

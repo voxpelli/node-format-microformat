@@ -6,22 +6,22 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 chai.should();
 
-describe('FormatAll', function () {
+describe('FormatAll', () => {
   const Formatter = require('../');
   const getFixtures = require('./fixtures');
 
   let formatter;
   let baseMicroformatData;
 
-  beforeEach(function () {
+  beforeEach(() => {
     const fixtures = getFixtures();
 
     formatter = new Formatter();
     baseMicroformatData = fixtures.baseMicroformatData;
   });
 
-  describe('formatAll', function () {
-    it('should format everything correctly', function () {
+  describe('formatAll', () => {
+    it('should format everything correctly', () => {
       const photoBuffer = Buffer.from('sampledata');
 
       baseMicroformatData.files = {

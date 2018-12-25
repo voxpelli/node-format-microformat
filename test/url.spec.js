@@ -9,7 +9,7 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 chai.should();
 
-describe('URL', function () {
+describe('URL', () => {
   const Formatter = require('../');
   const getFixtures = require('./fixtures');
 
@@ -17,7 +17,7 @@ describe('URL', function () {
   let baseMicroformatData;
   let sandbox;
 
-  beforeEach(function () {
+  beforeEach(() => {
     const fixtures = getFixtures();
 
     formatter = new Formatter({
@@ -27,38 +27,38 @@ describe('URL', function () {
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sandbox.restore();
   });
 
-  describe('formatURL', function () {
-    it('should base URL on slug', function () {
+  describe('formatURL', () => {
+    it('should base URL on slug', () => {
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015/06/awesomeness-is-awesome/');
     });
 
-    it('should support undefined permalink style', function () {
+    it('should support undefined permalink style', () => {
       formatter = new Formatter();
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015/06/30/awesomeness-is-awesome.html');
     });
 
-    it('should return absolute URL when requested', function () {
+    it('should return absolute URL when requested', () => {
       formatter = new Formatter('http://example.com/foo/');
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('http://example.com/foo/2015/06/30/awesomeness-is-awesome.html');
     });
 
-    it('should include derived category if any', function () {
+    it('should include derived category if any', () => {
       baseMicroformatData.derived = { category: 'interaction' };
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('interaction/2015/06/awesomeness-is-awesome/');
     });
 
-    it('should support name in permalink style', function () {
+    it('should support name in permalink style', () => {
       formatter = new Formatter({
         permalinkStyle: '/:name'
       });
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015-06-30-awesomeness-is-awesome');
     });
 
-    it('should support custom permalink style through callback', function () {
+    it('should support custom permalink style through callback', () => {
       const permalinkStyle = sinon.stub().returns('/:name');
 
       formatter = new Formatter({ permalinkStyle });
@@ -66,7 +66,7 @@ describe('URL', function () {
       return formatter.formatURL(baseMicroformatData).should.eventually.equal('2015-06-30-awesomeness-is-awesome');
     });
 
-    it('should support custom permalink style through callback returning Promise', function () {
+    it('should support custom permalink style through callback returning Promise', () => {
       const permalinkStyle = sinon.stub().resolves('/:name');
 
       formatter = new Formatter({ permalinkStyle });
