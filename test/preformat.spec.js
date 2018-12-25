@@ -15,11 +15,9 @@ describe('PreFormat', () => {
 
   let formatter;
   let baseMicroformatData;
-  let sandbox;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-    sandbox.useFakeTimers(1435674000000);
+    sinon.useFakeTimers(1435674000000);
 
     const fixtures = getFixtures();
 
@@ -28,7 +26,7 @@ describe('PreFormat', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('preFormat', () => {

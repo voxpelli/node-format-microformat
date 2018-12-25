@@ -15,7 +15,6 @@ describe('URL', () => {
 
   let formatter;
   let baseMicroformatData;
-  let sandbox;
 
   beforeEach(() => {
     const fixtures = getFixtures();
@@ -24,11 +23,10 @@ describe('URL', () => {
       permalinkStyle: '/:categories/:year/:month/:title/'
     });
     baseMicroformatData = fixtures.baseMicroformatData;
-    sandbox = sinon.sandbox.create();
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('formatURL', () => {

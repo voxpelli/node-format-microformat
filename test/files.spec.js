@@ -15,18 +15,16 @@ describe('Files', () => {
 
   let formatter;
   let baseMicroformatData;
-  let sandbox;
 
   beforeEach(() => {
     const fixtures = getFixtures();
 
     formatter = new Formatter();
     baseMicroformatData = fixtures.baseMicroformatData;
-    sandbox = sinon.sandbox.create();
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('_formatFilesSlug', () => {
