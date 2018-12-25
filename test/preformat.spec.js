@@ -277,7 +277,7 @@ describe('PreFormat', function () {
     });
 
     it('should derive english language from HTML content', function () {
-      baseMicroformatData.properties.content = [{html: 'Another evening at the cottage and Bob was feeling brave. Make some food by himself? Surely, how hard could it be. But as the night went on and the dinner cooked Bob grew ever more desperate. Pepper, salt – all these crazy names of things he had never heard before. It would be a long night for poor Mr Bob.'}];
+      baseMicroformatData.properties.content = [{ html: 'Another evening at the cottage and Bob was feeling brave. Make some food by himself? Surely, how hard could it be. But as the night went on and the dinner cooked Bob grew ever more desperate. Pepper, salt – all these crazy names of things he had never heard before. It would be a long night for poor Mr Bob.' }];
 
       formatter = new Formatter({
         deriveLanguages: ['eng', 'swe']

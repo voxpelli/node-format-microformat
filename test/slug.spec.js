@@ -37,7 +37,7 @@ describe('Slug', function () {
 
     it('should ignore html-tags when basing slug on content', function () {
       delete baseMicroformatData.properties.name;
-      baseMicroformatData.properties.content = [{html: '<h1>Foo</h1> Bar &amp; <strong>Abc</strong>'}];
+      baseMicroformatData.properties.content = [{ html: '<h1>Foo</h1> Bar &amp; <strong>Abc</strong>' }];
       formatter = new Formatter({ contentSlug: true });
       // Test twice so that we don't get a non-reusable regexp!
       formatter._formatSlug(baseMicroformatData).should.equal('foo-bar-abc');
