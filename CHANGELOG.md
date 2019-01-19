@@ -1,3 +1,7 @@
+## 0.11.0 (2018-12-25)
+
+* **Breaking change:** Now requires Node v8
+
 ## 0.10.2 (2018-01-20)
 
 * **Feature:** Made post layout configurable through `layoutName`
