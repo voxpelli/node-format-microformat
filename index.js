@@ -183,11 +183,8 @@ Formatter.prototype._formatContent = function (data) {
           });
         }) : content.html;
       }
-      if (!this.encodeHTML) {
-        return content.value || '';
-      }
 
-      return escapeHtml(content.value || '');
+      return this.encodeHTML ? escapeHtml(content.value || '') : content.value || '';
     }))
       .then(result => result.filter(value => !!value).join('\n') + '\n');
   }
