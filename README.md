@@ -29,12 +29,12 @@ Currently formats data into a hardcoded Jekyll style. This is intended to become
 Simple:
 
 ```javascript
-var MicropubFormatter = require('format-microformat');
+const MicropubFormatter = require('format-microformat');
 
-var formatter = new MicropubFormatter();
+const formatter = new MicropubFormatter();
 
 formatter.formatAll(micropubDocument)
-  .then(function (formatted) {
+  .then(formatted => {
     // Lots of formatted data that one can do lots of fun stuff with. Publish somewhere or such perhaps?
     // Available keys are "filename", "url", "content" and lastly "files" if any files were uploaded
   });
@@ -43,20 +43,18 @@ formatter.formatAll(micropubDocument)
 Advanced:
 
 ```javascript
-var MicropubFormatter = require('format-microformat');
+const MicropubFormatter = require('format-microformat');
 
-var formatter = new MicropubFormatter('http://example.com/');
+const formatter = new MicropubFormatter('http://example.com/');
 
 formatter.preFormat(micropubDocument)
-  .then(function (preFormatted) {
-    return Promise.all([
-      formatter.formatFilename(preFormatted),
-      formatter.format(preFormatted),
-      formatter.formatURL(preFormatted),
-    ]);
-  })
-  .then(function (lotsOfResolvedStuff) {
-    // Lots of formatted data that one can do lots of fun stuff with. Publish somewhere or such perhaps?
+  .then(preFormatted => Promise.all([
+    formatter.formatFilename(preFormatted),
+    formatter.format(preFormatted),
+    formatter.formatURL(preFormatted),
+  ]))
+  .then(([formattedFilename, formattedContent, formattedUrl]) => {
+    // Lots of formatted data that you can do lots of fun stuff with. Publish it somewhere maybe?
   });
 ```
 
