@@ -98,6 +98,7 @@ const Formatter = function (options) {
   this.permalinkStyle = options.permalinkStyle;
   this.deriveCategory = options.deriveCategory === undefined ? true : options.deriveCategory;
   this.layoutName = options.layoutName;
+  this.encodeHTML = options.encodeHTML === undefined ? true : options.encodeHTML;
 
   if (typeof this.filenameStyle !== 'function' && !this.filenameStyle.includes(':')) {
     throw new Error('Invalid filenameStyle, must include a placeholder');
@@ -183,7 +184,7 @@ Formatter.prototype._formatContent = function (data) {
         }) : content.html;
       }
 
-      return escapeHtml(content.value || '');
+      return this.encodeHTML ? escapeHtml(content.value || '') : content.value || '';
     }))
       .then(result => result.filter(value => !!value).join('\n') + '\n');
   }

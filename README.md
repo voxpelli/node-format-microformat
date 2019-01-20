@@ -76,6 +76,7 @@ formatter.preFormat(micropubDocument)
 * **filesStyle** – the filename style of uploaded files, in an extended form of the Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/). Should not include file extension, but should include `:filesslug`. Defaults to: `media/:year-:month-:slug/:filesslug`
 * **layoutName** – the name of a layout that overrides the default `micropubpost` one, or `false` to remove the layout completely from the front matter
 * **permalinkStyle** – a Jekyll [permalink style](https://jekyllrb.com/docs/permalinks/). Defaults to Jekyll's default: `date`
+* **encodeHTML** – if set to `false` then HTML-encoding will not happen for the content value. Defaults to `true`
 
 `layoutName`, `filenameStyle`, `filesStyle` and `permalinkStyle` can all be set directly or through a callback that's given some data and that callback might either return a value directly or return a `Promise` that eventually resolves to the value.
 
