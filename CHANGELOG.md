@@ -1,3 +1,7 @@
+## 0.11.1 (2019-01-20)
+
+* **Feature:** Non-standard: Made it possible to opt out of HTML encoding of plain text content through new `encodeHTML` option
+
 ## 0.11.0 (2018-12-25)
 
 * **Breaking change:** Now requires Node v8
