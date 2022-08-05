@@ -48,7 +48,7 @@
     "franc": "^1.1.1",
     "iso-639-3": "^0.2.0",
     "jekyll-utils": "^0.1.1",
-    "js-yaml": "^3.3.1",
+    "js-yaml": "^4.0.0",
     "lodash.clonedeepwith": "^4.5.0",
     "lodash.deburr": "^4.1.0",
     "lodash.defaultsdeep": "^4.6.0",
