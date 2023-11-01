@@ -1,9 +1,5 @@
 # Format Microformat
 
-[![Build Status](https://travis-ci.org/voxpelli/node-format-microformat.svg?branch=master)](https://travis-ci.org/voxpelli/node-format-microformat)
-[![Coverage Status](https://coveralls.io/repos/voxpelli/node-format-microformat/badge.svg)](https://coveralls.io/r/voxpelli/node-format-microformat)
-[![dependencies Status](https://david-dm.org/voxpelli/node-format-microformat/status.svg)](https://david-dm.org/voxpelli/node-format-microformat)
-[![Known Vulnerabilities](https://snyk.io/test/github/voxpelli/node-format-microformat/badge.svg?targetFile=package.json)](https://snyk.io/test/github/voxpelli/node-format-microformat?targetFile=package.json)
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat)](https://github.com/Flet/semistandard)
 
 Formats a Microformat JSON representation into eg. a Jekyll post
